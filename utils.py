@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine, text
 
-
 def get_engine():
     """Creating SQLite Engine to interact"""
     return create_engine("sqlite:///finalproject.db", future=True)

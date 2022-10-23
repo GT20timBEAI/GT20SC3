@@ -58,7 +58,7 @@ app = create_app()
 
 if __name__ == "__main__":
     from utils import assert_eq
-
+    from utils import COL
     app.config.update({"TESTING": True})
     c = app.test_client()
 
