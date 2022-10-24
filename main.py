@@ -65,34 +65,178 @@ if __name__ == "__main__":
     print(f"{COL.BOLD}Testing...{COL.ENDC}")
 
     # register user
-    register_seller_response = c.post(
+    register_user_response = c.post(
         "/sign-up",
         json={"name": "darul","email" : "darulcrypto@gmail.com", "phone_number": "085268487440", "password": "Ab123456"},
     )
     assert_eq(
-        register_seller_response.json,
+        register_user_response.json,
         {"message": "success, user created"},
     )
-    assert_eq(register_seller_response.status_code, 201)
+    assert_eq(register_user_response.status_code, 201)
 
-    # password incorect
-    register_buyer_response = c.post(
-        "/register",
-        json={"name": "wahyu","email" : "wahyusani@gmail.com", "phone_number": "085268487440", "password": "Ab123456"},
+    # password incorect(less than 8 character)
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wahyu","email" : "wahyusani@gmail.com", "phone_number": "085268487440", "password": "456"},
     )
     assert_eq(
-        register_buyer_response.json,
-        {"error": "username already used"},
+        register_user_response.json,
+        {"error": "Password must contain at least 8 characters"},
     )
-    assert_eq(register_buyer_response.status_code, 400)
+    assert_eq(register_user_response.status_code, 400)
 
-    # example for invalid password
-    invalid_password_response = c.post(
-        "/register",
-        json={"name": "rohma","email" : "rohma@gmail.com", "phone_number": "085268487440", "password": "ABZZCDZZ"},
+    # password incorect(doesn't contain any lowercase letters)
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wahyu","email" : "wahyusani@gmail.com", "phone_number": "085268487440", "password": "ABCD456"},
     )
     assert_eq(
-        invalid_password_response.json,
+        register_user_response.json,
         {"error": "Password must contain a lowercase letter"},
     )
-    assert_eq(invalid_password_response.status_code, 400)
+    assert_eq(register_user_response.status_code, 400)
+
+    # password incorect(doesn't contain any uppercase letters)
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wahyu","email" : "wahyusani@gmail.com", "phone_number": "085268487440", "password": "abcde456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "Password must contain an uppercase letter"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+
+    # password incorect(doesn't contain any numbers)
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wahyu","email" : "wahyusani@gmail.com", "phone_number": "085268487440", "password": "abcDdeabc"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "Password must contain a number"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # name incorect(name less than 5 caracter)
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wa","email" : "wahyusani@gmail.com", "phone_number": "085268487440", "password": "abcDdeabc123"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "name must contain at least 5 character"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # name incorect(name just alphabet)
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wahayu123","email" : "wahyusani@gmail.com", "phone_number": "085268487440", "password": "abcDdeabc123"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "name just alphabet"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # testing email
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wahayu123","email" : "wahyusani", "phone_number": "085268487440", "password": "abcDdeabc123"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "your email is wrong"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # testing email
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wahayu123","email" : "wahyusani@", "phone_number": "085268487440", "password": "abcDdeabc123"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "your email is wrong"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # testing email
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wahayu123","email" : "wahyusani@gmail", "phone_number": "085268487440", "password": "abcDdeabc123"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "your email is wrong"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # testing email
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wahayu123","email" : "wahyusani@gmail.", "phone_number": "085268487440", "password": "abcDdeabc123"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "your email is wrong"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # testing phone number
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "darul","email" : "darulcrypto@gmail.com", "phone_number": "0852684874", "password": "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "name must contain 12 character"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # testing phone number
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "darul","email" : "darulcrypto@gmail.com", "phone_number": "08526848744!", "password": "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "name just containt number"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # testing phone number
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "darul","email" : "darulcrypto@gmail.com", "phone_number": "085268487440", "password": "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "email already exist"},
+    )
+    assert_eq(register_user_response.status_code, 409)
+
+    # testing phone number
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "darul","email" : "darulcryp7to@gmail.com", "phone_number": "085268487440", "password": "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "phone number already exist"},
+    )
+    assert_eq(register_user_response.status_code, 409)
+
+    # register user
+    register_user_response = c.post(
+        "/sign-up",
+        json={"name": "wahyu sani","email" : "wahyusani@gmail.com", "phone_number": "085268487040", "password": "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"message": "success, user created"},
+    )
+    assert_eq(register_user_response.status_code, 201)
