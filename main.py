@@ -189,7 +189,7 @@ if __name__ == "__main__":
     # testing phone number
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "darul","email" : "darulcrypto@gmail.com", "phone_number": "0852684874", "password": "Ab123456"},
+        json={"name": "darul","email" : "darulc8rypto@gmail.com", "phone_number": "0852684874", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -200,7 +200,7 @@ if __name__ == "__main__":
     # testing phone number
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "darul","email" : "darulcrypto@gmail.com", "phone_number": "08526848744!", "password": "Ab123456"},
+        json={"name": "darul","email" : "darulcryptop@gmail.com", "phone_number": "08526848744!", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -208,7 +208,7 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
 
-    # testing phone number
+    # testing mail address
     register_user_response = c.post(
         "/sign-up",
         json={"name": "darul","email" : "darulcrypto@gmail.com", "phone_number": "085268487440", "password": "Ab123456"},
@@ -240,3 +240,119 @@ if __name__ == "__main__":
         {"message": "success, user created"},
     )
     assert_eq(register_user_response.status_code, 201)
+
+    """
+    ================================================
+                    TESTING LOGIN
+    ================================================
+    """
+    # password is less than 8 characters
+    register_user_response = c.post(
+        "/login",
+        json={"email" : "darulcrypto@gmail.com", "password" : "ABC"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "Password must contain at least 8 characters"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # password doesn't contain any lowercase letters
+    register_user_response = c.post(
+        "/login",
+        json={"email" : "darulcrypto@gmail.com", "password" : "ABC123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "Password must contain a lowercase letter"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # password doesn't contain any lowercase letters
+    register_user_response = c.post(
+        "/login",
+        json={"email" : "darulcrypto@gmail.com", "password" : "abc123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "Password must contain an uppercase letter"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # password doesn't contain any lowercase letters
+    register_user_response = c.post(
+        "/login",
+        json={"email" : "darulcrypto@gmail.com", "password" : "abcABCDE"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "Password must contain a number"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # testing email
+    register_user_response = c.post(
+        "/login",
+        json={"email" : "darulcrypto", "password" : "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "your email is wrong"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # testing email
+    register_user_response = c.post(
+        "/login",
+        json={"email" : "darulcrypto@", "password" : "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "your email is wrong"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # testing email
+    register_user_response = c.post(
+        "/login",
+        json={"email" : "darulcrypto@gmail", "password" : "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "your email is wrong"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+
+    # email not registered
+    register_user_response = c.post(
+        "/login",
+        json={"email" : "darulcrypto7@gmail.com", "password" : "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "Email is not registered"},
+    )
+    assert_eq(register_user_response.status_code, 409)
+
+    # password wrong
+    register_user_response = c.post(
+        "/login",
+        json={"email" : "darulcrypto@gmail.com", "password" : "Abc123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "Your password is wrong"},
+    )
+    assert_eq(register_user_response.status_code, 409)
+
+    # password wrong
+    register_user_response = c.post(
+        "/login",
+        json={"email" : "darulcrypto@gmail.com", "password" : "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"message": "Login succes"},
+    )
+    assert_eq(register_user_response.status_code, 200)
+

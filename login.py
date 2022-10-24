@@ -23,7 +23,15 @@ Requirements (from the earliest to check):
     - have @ character
     - have alphabet after @
     - have . character after @ character and alphabet
-
+- if email not registered
+    - return {"error": "Email is not registered"}
+    - status code: 409
+- if password is wrong
+    - return {"error": "Your password is wrong"}
+    - status code: 409
+- if everything is corect
+    - return {"message": "Login succes"}
+    - status code: 200
 """
 
 

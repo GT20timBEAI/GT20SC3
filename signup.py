@@ -52,7 +52,6 @@ Requirements (from the earliest to check):
     - return {"message": "success, user created"}
     - status code: 201
 
-
 """
 
 
