@@ -32,8 +32,12 @@ Requirements (from the earliest to check):
     - return {"error": "Your password is wrong"}
     - status code: 409
 - if everything is corect
-    - return {"message": "Login succes"}
-    - status code: 200
+    - return {"user_information" : {
+        "name": "Raihan Parlaungan",
+        "email": "raihan@gmail.com",
+        "phone_number": "08138073126",
+        "type:" : "buyer"( there are 2 types of user, "buyer" and "seller"
+        } , "token" :  "jwt_token" , "message" : "Login success" }
 """
 
 
@@ -41,6 +45,9 @@ Requirements (from the earliest to check):
 from flask import Blueprint
 
 login_bp = Blueprint("login", __name__, url_prefix="/login")
+
+#import your jwt token to this variabel for testing
+testToken = None
 
 # untuk request cek di scr
 @login_bp.route("", methods=["POST"])

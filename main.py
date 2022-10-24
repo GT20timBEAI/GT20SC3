@@ -4,7 +4,7 @@ from signup import signup_bp
 from utils import get_engine
 from products import products_bp
 from home import home_bp
-from login import login_bp
+from login import login_bp, testToken
 from categories import categories_bp
 from cart import cart_bp
 from shipping import shipping_bp
@@ -345,14 +345,19 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 409)
 
-    # password wrong
+    # succesful login
+    
     register_user_response = c.post(
         "/login",
         json={"email" : "darulcrypto@gmail.com", "password" : "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
-        {"message": "Login succes"},
+        {"user_information" : {"name": "Raihan Parlaungan",
+        "email": "raihan@gmail.com",
+        "phone_number": "08138073126",
+        "type:" : "buyer"
+        },"token" :  testToken , "message": "Login succes"},
     )
     assert_eq(register_user_response.status_code, 200)
 
