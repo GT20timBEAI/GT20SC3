@@ -4,5 +4,7 @@ gt20/
 *.pyc
 __pycache__/
 
+gt20/
+
 # SQLite
 *.db

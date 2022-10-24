@@ -55,6 +55,14 @@ Finally, check that the pip is installed by running
 ```
 which pip3.9
 ```
+## Pre-work
+
+- Activate your virtual environment before running any Python file
+- After activation, re-install the necessary packages by running 
+```
+cd to root_folder
+pip3.9 install -r requirement.txt
+```
 
 ## Virtual environment
 

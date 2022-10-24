@@ -1,3 +1,20 @@
+"""
+QUERY PARAMS EXAMPLE
+
+[Key]           [Example]
+page            1
+page_size       100
+sort_by         Price a_z, Price z_a
+category        Id category a, id category b
+price           0,10000
+condition       used
+product_name    name
+
+"""
+
+
+
+
 from flask import Blueprint
 
 
