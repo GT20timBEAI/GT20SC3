@@ -13,6 +13,7 @@ def addtoCart():
 def getUserCart():
     pass
 
+
 @cart_bp.route("/{cart_id}", methods=["DELETE"])
 def deleteCartItem():
     pass

@@ -67,7 +67,7 @@ if __name__ == "__main__":
     # register user
     register_seller_response = c.post(
         "/sign-up",
-        json={"name": "darul","email" : "darulcrypto@gmail.com", "username": "darulcrypto", "password": "Ab123456"},
+        json={"name": "darul","email" : "darulcrypto@gmail.com", "phone_number": "085268487440", "password": "Ab123456"},
     )
     assert_eq(
         register_seller_response.json,
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     # password incorect
     register_buyer_response = c.post(
         "/register",
-        json={"name": "wahyu","email" : "wahyusani@gmail.com", "username": "A", "password": "Ab123456"},
+        json={"name": "wahyu","email" : "wahyusani@gmail.com", "phone_number": "085268487440", "password": "Ab123456"},
     )
     assert_eq(
         register_buyer_response.json,
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     # example for invalid password
     invalid_password_response = c.post(
         "/register",
-        json={"name": "rohma","email" : "rohma@gmail.com", "username": "c", "password": "ABZZCDZZ"},
+        json={"name": "rohma","email" : "rohma@gmail.com", "phone_number": "085268487440", "password": "ABZZCDZZ"},
     )
     assert_eq(
         invalid_password_response.json,
