@@ -55,7 +55,7 @@ Requirements (from the earliest to check):
 
 """
 
-
+import re
 from flask import Blueprint
 
 signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
@@ -67,9 +67,12 @@ signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
 def signup():
     try:
 
+        pattern_name = "[a-zA-Z0-9 ]"
+        pattern_email = "[a-zA-Z0-9]+@[a-zA-Z]+\.(com|edu|net)"
         body = request.json
         name, email, phone_number, password = body['name'], body['email'], body[phone_number], body['password']
 
+        # TODO: Name Rule
         if len(name) < 5:
             return {"error": "Name must contain at least 5 characters"}, 400
 
@@ -79,8 +82,28 @@ def signup():
         if not any(filter(str.isupper, name)):
             return {"error": "Name must contain an uppercase letter"}, 400
 
+        if any(filter(str.isdigit, name)):
+            return {"error": "Name only contain alphabet"}, 400
+
+        if not (re.search(pattern_name, name)):
+            return {"error": "Name only contain alphabet"}, 400
+
+        # FIXME: Mungkin ada saran lain untuk filter satu ini
+        # if any(filter(str.isalnum, name)):
+        #     return {"error": "Name only contain alphabet"}, 400
+
+        # TODO: Email Rule
+        if not (re.search(pattern_email, email)):
+            return {"error": "your email is wrong"}, 400
+
+        # TODO: Phone Number Rule
         if len(phone_number) < 12 and len(phone_number) > 12:
             return {"error": "Phone number must contain 12 characters"}, 400
+
+        if any(filter(str.isalpha, phone_number)):
+            return {"error": "name just containt number"}, 400
+
+        # TODO: Password Rule
 
         if len(password) < 8:
             return {"error": "Password must contain at least 8 characters"}, 400
