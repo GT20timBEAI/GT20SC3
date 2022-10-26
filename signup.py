@@ -70,7 +70,8 @@ def signup():
         pattern_name = "[a-zA-Z0-9 ]"
         pattern_email = "[a-zA-Z0-9]+@[a-zA-Z]+\.(com|edu|net)"
         body = request.json
-        name, email, password = body['name'], body['email'], body['password']
+        name, email, phone_number, password = body['name'], body[
+            'email'], body['phone_number'], body['password']
 
         # TODO: Name Rule
         if len(name) < 5:
