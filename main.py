@@ -353,9 +353,9 @@ if __name__ == "__main__":
     )
     assert_eq(
         register_user_response.json,
-        {"user_information" : {"name": "Raihan Parlaungan",
-        "email": "raihan@gmail.com",
-        "phone_number": "08138073126",
+        {"user_information" : {"name": "darul",
+        "email": "darulcrypto@gmail.com",
+        "phone_number": "085268487440",
         "type:" : "buyer"
         },"token" :  testToken , "message": "Login succes"},
     )
