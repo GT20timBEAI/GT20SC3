@@ -56,7 +56,7 @@ Requirements (from the earliest to check):
 """
 
 import re
-from flask import Blueprint
+from flask import Blueprint, request
 
 signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
 
@@ -70,7 +70,7 @@ def signup():
         pattern_name = "[a-zA-Z0-9 ]"
         pattern_email = "[a-zA-Z0-9]+@[a-zA-Z]+\.(com|edu|net)"
         body = request.json
-        name, email, phone_number, password = body['name'], body['email'], body[phone_number], body['password']
+        name, email, password = body['name'], body['email'], body['password']
 
         # TODO: Name Rule
         if len(name) < 5:
