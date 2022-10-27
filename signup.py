@@ -35,24 +35,22 @@ Requirements (from the earliest to check):
             - status code: 400
 -phone number must be:
     - just number(no alphabet, simbol and special character)
-        - return {"error": "name just containt number"}
+        - return {"error": "phone just containt number"}
         - status code:400
     - contains = 12 characters
-        - return {"error": "name must contain 12 character"}
+        - return {"error": "phone must contain less than 12 character"}
         - status code:400
-
 - if email already used
     - return {"error": "email already exist"}
     -status code: 409
 - if phone number already used
     - return {"error": "phone number already exist"}
     - status code: 409
-
 - if everything is correct 
     - return {"message": "success, user created"}
     - status code: 201
-
 """
+
 
 
 from flask import Blueprint
