@@ -23,7 +23,21 @@ Requirements (from the earliest to check):
     - have @ character
     - have alphabet after @
     - have . character after @ character and alphabet
-
+        - return {"error": "your email is wrong"}
+        - status code: 400
+- if email not registered
+    - return {"error": "Email is not registered"}
+    - status code: 409
+- if password is wrong
+    - return {"error": "Your password is wrong"}
+    - status code: 409
+- if everything is corect
+    - return {"user_information" : {
+        "name": "Raihan Parlaungan",
+        "email": "raihan@gmail.com",
+        "phone_number": "08138073126",
+        "type:" : "buyer"( there are 2 types of user, "buyer" and "seller"
+        } , "token" :  "jwt_token" , "message" : "Login success" }
 """
 
 
@@ -31,6 +45,9 @@ Requirements (from the earliest to check):
 from flask import Blueprint
 
 login_bp = Blueprint("login", __name__, url_prefix="/login")
+
+#import your jwt token to this variabel for testing
+testToken = None
 
 # untuk request cek di scr
 @login_bp.route("", methods=["POST"])
