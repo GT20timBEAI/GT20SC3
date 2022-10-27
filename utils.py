@@ -1,4 +1,22 @@
 from sqlalchemy import create_engine, text
+import re
+
+
+def symbol(string):
+    symbol = "!~`@#$%^&*()_-+=]}[{\n|';:/?>.<,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for i in string:
+        if i in symbol:
+            return True
+
+
+def inValid(email):
+    regex = re.compile(
+        r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
+    if re.fullmatch(regex, email):
+        return False
+    else:
+        return True
+
 
 def get_engine():
     """Creating SQLite Engine to interact"""
@@ -40,7 +58,8 @@ def assert_eq(expression, expected):
         if expression == expected:
             return
     except Exception as e:
-        raise RuntimeError(f"{COL.WARNING}Expression can't be evaluated: {COL.FAIL}{e}{COL.ENDC}")
+        raise RuntimeError(
+            f"{COL.WARNING}Expression can't be evaluated: {COL.FAIL}{e}{COL.ENDC}")
 
     errs = [
         "",
