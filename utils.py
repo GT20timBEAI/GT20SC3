@@ -9,6 +9,14 @@ def symbol(string):
             return True
 
 
+def name_symbol(name):
+    regex = re.compile("[a-zA-Z0-9 ]")
+    if re.fullmatch(regex, name):
+        return False
+    else:
+        return True
+
+
 def inValid(email):
     regex = re.compile(
         r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')

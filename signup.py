@@ -52,7 +52,8 @@ Requirements (from the earliest to check):
 """
 
 from flask import Blueprint, request
-import re
+from utils import inValid, symbol, name_symbol, run_query
+from sqlalchemy import exc
 
 signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
 
@@ -61,58 +62,43 @@ signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
 
 @signup_bp.route("", methods=["POST"])
 def signup():
-    try:
+    body = request.json
+    name, email, phone, password = body["name"], body["email"], body["phone_number"], body["password"]
+    users = run_query("select email, phone_number from users")
 
-        pattern_name = "[a-zA-Z0-9 ]"
-        pattern_email = "[a-zA-Z0-9]+@[a-zA-Z]+\.(com|edu|net)"
-        body = request.json
-        name, email, phone_number, password = body['name'], body[
-            'email'], body['phone_number'], body['password']
+    # TODO: Password Rule
+    if len(password) < 8:
+        return {"error": "Password must contain at least 8 characters"}, 400
+    elif any(i.islower() for i in password) == False:
+        return {"error": "Password must contain a lowercase letter"}, 400
+    elif any(i.isupper() for i in password) == False:
+        return {"error": "Password must contain an uppercase letter"}, 400
+    elif any(c.isdigit() for c in password) == False:
+        return {"error": "Password must contain a number"}, 400
 
-        # TODO: Name Rule
-        if len(name) < 5:
-            return {"error": "Name must contain at least 5 characters"}, 400
+    # TODO: Name Rule
+    elif len(name) < 5:
+        return {"error": "name must contain at least 5 characters"}, 400
+    elif any(c.isdigit() for c in name) == True:
+        return {"error": "name only contains of alphabet"}, 400
 
-        if not any(filter(str.islower, name)):
-            return {"error": "Name must contain a lowercase letter"}, 400
+    # TODO: Email Rule
+    elif inValid(email):
+        return {"error": "your email is wrong"}, 400
 
-        if not any(filter(str.isupper, name)):
-            return {"error": "Name must contain an uppercase letter"}, 400
-
-        if any(filter(str.isdigit, name)):
-            return {"error": "Name only contain alphabet"}, 400
-
-        if not (re.search(pattern_name, name)):
-            return {"error": "Name only contain alphabet"}, 400
-
-        # FIXME: Mungkin ada saran lain untuk filter satu ini
-        # if any(filter(str.isalnum, name)):
-        #     return {"error": "Name only contain alphabet"}, 400
-
-        # TODO: Email Rule
-        if not (re.search(pattern_email, email)):
-            return {"error": "your email is wrong"}, 400
-
-        # TODO: Phone Number Rule
-        if len(phone_number) < 12 and len(phone_number) > 12:
-            return {"error": "Phone number must contain 12 characters"}, 400
-
-        if any(filter(str.isalpha, phone_number)):
-            return {"error": "name just containt number"}, 400
-
-        # TODO: Password Rule
-
-        if len(password) < 8:
-            return {"error": "Password must contain at least 8 characters"}, 400
-
-        if not any(filter(str.islower, password)):
-            return {"error": "Password must contain a lowercase letter"}, 400
-
-        if not any(filter(str.isupper, password)):
-            return {"error": "Password must contain an uppercase letter"}, 400
-
-        if not any(filter(str.isdigit, password)):
-            return {"error": "Password must contain a number"}, 400
-
-    except KeyError:
-        return {"error": "name or email or phone number or password are not given"}, 400
+    # TODO: Phone Number Rule
+    elif len(phone) < 12:
+        return {"error": "Phone number must contain 12 characters"}, 400
+    elif symbol(phone):
+        return {"error": "Phone number only containing numbers"}, 400
+    for i in users:
+        print("hai")
+        print(phone)
+        print(i["phone_number"])
+        if email == i["email"]:
+            return {"error": "email already exist"}, 409
+        if phone == i["phone_number"]:
+            return {"error": "phone number already exist"}, 409
+    run_query(
+        f"insert into users(name, email, phone_number, password, is_admin) values(\'{name}\',\'{email}\',{phone},\'{password}\',0)", True)
+    return {"message": "success, user created"}, 201

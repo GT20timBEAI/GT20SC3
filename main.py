@@ -12,13 +12,13 @@ from cart import cart_bp
 from shipping import shipping_bp
 from user import user_bp
 from sqlalchemy import (
-    MetaData, 
-    Table, 
-    Column, 
-    String, 
+    MetaData,
+    Table,
+    Column,
+    String,
     create_engine,
     Integer,
-    )
+)
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
@@ -27,7 +27,8 @@ def create_app():
     app = Flask(__name__)
 
     # always register your blueprint(s) when creating application
-    blueprints = [signup_bp, login_bp, products_bp, home_bp, categories_bp, cart_bp, shipping_bp, user_bp]
+    blueprints = [signup_bp, login_bp, products_bp, home_bp,
+                  categories_bp, cart_bp, shipping_bp, user_bp]
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
 
@@ -37,16 +38,16 @@ def create_app():
     db_name = "finalproject.db"
     if os.path.isfile(db_name):
         os.remove(db_name)
-    
+
     # buat table dengan template ORM dibawah
     engine = get_engine()
     meta = MetaData()
     Table(
         "users",
         meta,
-        Column("id", Integer, primary_key= True),
+        Column("id", Integer, primary_key=True),
         Column("name", String, nullable=False),
-        Column("email", String, nullable=False, unique= True),
+        Column("email", String, nullable=False, unique=True),
         Column("phone_number", String, nullable=False, unique=True),
         Column("password", String, nullable=False),
         Column("is_admin", Integer, nullable=True, default=0)
@@ -54,7 +55,6 @@ def create_app():
     meta.create_all(engine)
 
     return app
-
 
 
 app = create_app()
@@ -75,22 +75,24 @@ if __name__ == "__main__":
     # register user
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "darul","email" : "darulcrypto@gmail.com", "phone_number": "6285268487440", "password": "Ab123456"},
+        json={"name": "darul", "email": "darulcrypto@gmail.com",
+              "phone_number": "6285268487440", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
         {"message": "success, user created"},
     )
     assert_eq(register_user_response.status_code, 201)
-    num=1
+    num = 1
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
+    num += 1
     # password incorect(less than 8 character)
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wahyu","email" : "wahyusani@gmail.com", "phone_number": "6285268487440", "password": "456"},
+        json={"name": "wahyu", "email": "wahyusani@gmail.com",
+              "phone_number": "6285268487440", "password": "456"},
     )
     assert_eq(
         register_user_response.json,
@@ -100,11 +102,12 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
+    num += 1
     # password incorect(doesn't contain any lowercase letters)
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wahyu","email" : "wahyusani@gmail.com", "phone_number": "6285268487440", "password": "ABCD4567"},
+        json={"name": "wahyu", "email": "wahyusani@gmail.com",
+              "phone_number": "6285268487440", "password": "ABCD4567"},
     )
     assert_eq(
         register_user_response.json,
@@ -114,12 +117,13 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
+    num += 1
 
     # password incorect(doesn't contain any uppercase letters)
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wahyu","email" : "wahyusani@gmail.com", "phone_number": "6285268487440", "password": "abcde456"},
+        json={"name": "wahyu", "email": "wahyusani@gmail.com",
+              "phone_number": "6285268487440", "password": "abcde456"},
     )
     assert_eq(
         register_user_response.json,
@@ -129,13 +133,13 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
 
     # password incorect(doesn't contain any numbers)
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wahyu","email" : "wahyusani@gmail.com", "phone_number": "6285268487440", "password": "abcDdeabc"},
+        json={"name": "wahyu", "email": "wahyusani@gmail.com",
+              "phone_number": "6285268487440", "password": "abcDdeabc"},
     )
     assert_eq(
         register_user_response.json,
@@ -145,42 +149,45 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # name incorect(name less than 5 caracter)
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wa","email" : "wahyusani@gmail.com", "phone_number": "6285268487440", "password": "abcDdeabc123"},
+        json={"name": "wa", "email": "wahyusani@gmail.com",
+              "phone_number": "6285268487440", "password": "abcDdeabc123"},
     )
     assert_eq(
         register_user_response.json,
-        {"error": "name must contain at least 5 character"},
+        {"error": "name must contain at least 5 characters"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # name incorect(name just alphabet)
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wahayu123","email" : "wahyusani@gmail.com", "phone_number": "6285268487440", "password": "abcDdeabc123"},
+        json={"name": "wahayu123", "email": "wahyusani@gmail.com",
+              "phone_number": "6285268487440", "password": "abcDdeabc123"},
     )
     assert_eq(
         register_user_response.json,
-        {"error": "name just alphabet"},
+        {"error": "name only contains of alphabet"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing email
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wahayu","email" : "wahyusani", "phone_number": "6285268487440", "password": "abcDdeabc123"},
+        json={"name": "wahayu", "email": "wahyusani",
+              "phone_number": "6285268487440", "password": "abcDdeabc123"},
     )
     assert_eq(
         register_user_response.json,
@@ -190,12 +197,13 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES            ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing email
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wahayu","email" : "wahyusani@", "phone_number": "6285268487440", "password": "abcDdeabc123"},
+        json={"name": "wahayu", "email": "wahyusani@",
+              "phone_number": "6285268487440", "password": "abcDdeabc123"},
     )
     assert_eq(
         register_user_response.json,
@@ -205,12 +213,13 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing email
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wahayu","email" : "wahyusani@gmail", "phone_number": "6285268487440", "password": "abcDdeabc123"},
+        json={"name": "wahayu", "email": "wahyusani@gmail",
+              "phone_number": "6285268487440", "password": "abcDdeabc123"},
     )
     assert_eq(
         register_user_response.json,
@@ -220,12 +229,13 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing email
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wahayu","email" : "wahyusani@gmail.", "phone_number": "6285268487440", "password": "abcDdeabc123"},
+        json={"name": "wahayu", "email": "wahyusani@gmail.",
+              "phone_number": "6285268487440", "password": "abcDdeabc123"},
     )
     assert_eq(
         register_user_response.json,
@@ -235,42 +245,45 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing phone number
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "darul","email" : "darulc8rypto@gmail.com", "phone_number": "62852684874", "password": "Ab123456"},
+        json={"name": "darul", "email": "darulc8rypto@gmail.com",
+              "phone_number": "62852684874", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
-        {"error": "phone must contain less than 12 character"},
+        {"error": "Phone number must contain 12 characters"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing phone number
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "darul","email" : "darulcryptop@gmail.com", "phone_number": "628526848744!", "password": "Ab123456"},
+        json={"name": "darul", "email": "darulcryptop@gmail.com",
+              "phone_number": "628526848744!", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
-        {"error": "phone just containt number"},
+        {"error": "Phone number only containing numbers"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing mail address
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "darul","email" : "darulcrypto@gmail.com", "phone_number": "6285268487440", "password": "Ab123456"},
+        json={"name": "darul", "email": "darulcrypto@gmail.com",
+              "phone_number": "6285268487440", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -280,12 +293,13 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing phone number
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "darul","email" : "darulcryp7to@gmail.com", "phone_number": "6285268487440", "password": "Ab123456"},
+        json={"name": "darul", "email": "darulcryp7to@gmail.com",
+              "phone_number": "6285268487440", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -295,12 +309,13 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # register user
     register_user_response = c.post(
         "/sign-up",
-        json={"name": "wahyu sani","email" : "wahyusani@gmail.com", "phone_number": "6285268487040", "password": "Ab123456"},
+        json={"name": "wahyu sani", "email": "wahyusani@gmail.com",
+              "phone_number": "6285268487040", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -310,18 +325,18 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     """
     ================================================
                     TESTING LOGIN
     ================================================
     """
-    num=1
+    num = 1
     # password is less than 8 characters
     register_user_response = c.post(
         "/login",
-        json={"email" : "darulcrypto@gmail.com", "password" : "ABC"},
+        json={"email": "darulcrypto@gmail.com", "password": "ABC"},
     )
     assert_eq(
         register_user_response.json,
@@ -331,12 +346,12 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # password doesn't contain any lowercase letters
     register_user_response = c.post(
         "/login",
-        json={"email" : "darulcrypto@gmail.com", "password" : "ABC123456"},
+        json={"email": "darulcrypto@gmail.com", "password": "ABC123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -346,12 +361,12 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # password doesn't contain any lowercase letters
     register_user_response = c.post(
         "/login",
-        json={"email" : "darulcrypto@gmail.com", "password" : "abc123456"},
+        json={"email": "darulcrypto@gmail.com", "password": "abc123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -361,12 +376,12 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # password doesn't contain any lowercase letters
     register_user_response = c.post(
         "/login",
-        json={"email" : "darulcrypto@gmail.com", "password" : "abcABCDE"},
+        json={"email": "darulcrypto@gmail.com", "password": "abcABCDE"},
     )
     assert_eq(
         register_user_response.json,
@@ -376,12 +391,12 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing email
     register_user_response = c.post(
         "/login",
-        json={"email" : "darulcrypto", "password" : "Ab123456"},
+        json={"email": "darulcrypto", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -391,12 +406,12 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing email
     register_user_response = c.post(
         "/login",
-        json={"email" : "darulcrypto@", "password" : "Ab123456"},
+        json={"email": "darulcrypto@", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -406,12 +421,12 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # testing email
     register_user_response = c.post(
         "/login",
-        json={"email" : "darulcrypto@gmail", "password" : "Ab123456"},
+        json={"email": "darulcrypto@gmail", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -421,12 +436,12 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # email not registered
     register_user_response = c.post(
         "/login",
-        json={"email" : "darulcrypto7@gmail.com", "password" : "Ab123456"},
+        json={"email": "darulcrypto7@gmail.com", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -436,12 +451,12 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # password wrong
     register_user_response = c.post(
         "/login",
-        json={"email" : "darulcrypto@gmail.com", "password" : "Abc123456"},
+        json={"email": "darulcrypto@gmail.com", "password": "Abc123456"},
     )
     assert_eq(
         register_user_response.json,
@@ -451,24 +466,24 @@ if __name__ == "__main__":
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
-    
+    num += 1
+
     # succesful login
-    
+
     register_user_response = c.post(
         "/login",
-        json={"email" : "darulcrypto@gmail.com", "password" : "Ab123456"},
+        json={"email": "darulcrypto@gmail.com", "password": "Ab123456"},
     )
     assert_eq(
         register_user_response.json,
-        {"user_information" : {"name": "darul",
-        "email": "darulcrypto@gmail.com",
-        "phone_number": "085268487440",
-        "type:" : "buyer"
-        },"token" :  testToken , "message": "Login succes"},
+        {"user_information": {"name": "darul",
+                              "email": "darulcrypto@gmail.com",
+                              "phone_number": "085268487440",
+                              "type:": "buyer"
+                              }, "token":  testToken, "message": "Login succes"},
     )
     assert_eq(register_user_response.status_code, 200)
     print("==================================================")
     print(f"                      TEST {num} SUCCES                         ")
     print("==================================================")
-    num+=1
+    num += 1
