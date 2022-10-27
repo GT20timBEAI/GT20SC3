@@ -53,7 +53,6 @@ Requirements (from the earliest to check):
 
 from flask import Blueprint, request
 from utils import inValid, symbol, name_symbol, run_query
-from sqlalchemy import exc
 
 signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
 
