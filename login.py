@@ -40,7 +40,7 @@ Requirements (from the earliest to check):
         } , "token" :  "jwt_token" , "message" : "Login success" }
 """
 
-
+import jwt
 from flask import Blueprint, request
 from utils import run_query, inValid
 
