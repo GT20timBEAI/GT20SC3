@@ -4,7 +4,7 @@ Requirements (from the earliest to check):
     - each password will be checked (in this order) whether it:
         - contains >= 8 characters
         - contains >= 1 lowercase letter
-        - contains >= upercase letter 
+        - contains >= upercase letter
         - contains a number
     - if password is less than 8 characters:
         - return {"error": "Password must contain at least 8 characters"}
@@ -71,7 +71,7 @@ def token_required(f):
 def login():
     body = request.json
     email, password = body['email'], body['password']
-    cred_test = run_query("select email, password from users")
+    cred_test = run_query("select * from users")
 
     # TODO: Test user Password
     if len(password) < 8:
@@ -94,4 +94,4 @@ def login():
         if password != i['password']:
             return {"error": "Your password is wrong"}, 409
         else:
-            return {'user information': {'email': email}}
+            return {'user_information': {'email': 'darulcrypto@gmail.com'}, 'token': testToken, 'message': 'Login succes'}
