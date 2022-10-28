@@ -70,8 +70,7 @@ def token_required(f):
 @login_bp.route("", methods=["POST"])
 def login():
     body = request.json
-    email, password, phone_number, type, token = body['email'], body[
-        'password'], body['phone_number'], body['type'], body['token']
+    email, password = body['email'], body['password']
     cred_test = run_query("select email, password from users")
 
     # TODO: Test user Password
@@ -94,4 +93,5 @@ def login():
             return {"error": "Email is not registered"}, 409
         if password != i['password']:
             return {"error": "Your password is wrong"}, 409
-    return {"message": "login success"}
+        else:
+            return {'user information': {'email': email}}
