@@ -93,5 +93,4 @@ def login():
             return {"error": "Email is not registered"}, 409
         if password != i['password']:
             return {"error": "Your password is wrong"}, 409
-        else:
-            return {'user_information': {'email': 'darulcrypto@gmail.com'}, 'token': testToken, 'message': 'Login succes'}
+        return {'user_information': {'name': i['name'], 'email': 'darulcrypto@gmail.com', 'phone number': i['phone_number'], 'type': i['is_admin']}, 'token': testToken, 'message': 'Login succes'}
