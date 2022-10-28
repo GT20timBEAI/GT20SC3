@@ -69,33 +69,29 @@ def token_required(f):
 
 @login_bp.route("", methods=["POST"])
 def login():
-    email = request.json.get('email')
-    password = request.json.get('password')
+    body = request.json
+    email, password, phone_number, type, token = body['email'], body[
+        'password'], body['phone_number'], body['type'], body['token']
+    cred_test = run_query("select email, password from users")
 
-    # TODO: Email Rule
+    # TODO: Test user Password
+    if len(password) < 8:
+        return {"error": "Password must contain at least 8 characters"}, 400
+    elif not any(filter(str.islower, password)):
+        return {"error": "Password must contain a lowercase letter"}, 400
+    elif not any(filter(str.isupper, password)):
+        return {"error": "Password must contain an uppercase letter"}, 400
+    elif not any(filter(str.isdigit, password)):
+        return {"error": "Password must contain a number"}, 400
+
+    # TODO: Test user Email
     if inValid(email):
         return {"error": "your email is wrong"}, 400
 
-    # TODO: Password Rule
-    if len(password) < 8:
-        return {"error": "Password must contain at least 8 characters"}, 400
-    elif any(i.islower for i in password) == False:
-        return {"error": "Password must contain a lowercase letter"}, 400
-    elif any(i.isupper for i in password) == False:
-        return {"error": "Password must contain an uppercase letter"}, 400
-    elif any(i.isdigit for i in password) == False:
-        return {"error": "Password must contain a number"}, 400
-
-    # TODO: Test user Email and Password
-    cred_test = run_query(
-        "select email, password from users where (email == email) and (password == password)")
+    # TODO: Check if email and password is exist in database or not
     for i in cred_test:
-        if inValid(email):
-            return {"error": "your email is wrong"}, 400
-
-        # TODO: Check if email and password is exist in database or not
-        if email != i["email"]:
+        if email != i['email']:
             return {"error": "Email is not registered"}, 409
-        if password != i["password"]:
+        if password != i['password']:
             return {"error": "Your password is wrong"}, 409
     return {"message": "login success"}
