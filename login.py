@@ -42,20 +42,35 @@ Requirements (from the earliest to check):
 
 import jwt
 from flask import Blueprint, request
-from utils import run_query, inValid
+from utils import run_query, inValid, user_jwt
 
 login_bp = Blueprint("login", __name__, url_prefix="/login")
 
 # import your jwt token to this variabel for testing
-testToken = None
-
+testToken = user_jwt
 # untuk request cek di scr
+
+
+def token_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token = request.args.get('token')
+        if not token:
+            return {"Error": "Authentication is failed"}, 400
+
+        try:
+            result = jwt.decode(
+                token, user_jwt, algorithms=["HS256"])
+        except:
+            return {"Authentication Failed 2"}
+        return f(*args, **kwargs)
+    return decorator
 
 
 @login_bp.route("", methods=["POST"])
 def login():
-    body = request.json
-    email, password = body['email'], body['password']
+    email = request.json.get('email')
+    password = request.json.get('password')
 
     # TODO: Email Rule
     if inValid(email):
@@ -73,9 +88,14 @@ def login():
 
     # TODO: Test user Email and Password
     cred_test = run_query(
-        "select email, password from users where(email == email)")
+        "select email, password from users where (email == email) and (password == password)")
     for i in cred_test:
+        if inValid(email):
+            return {"error": "your email is wrong"}, 400
+
+        # TODO: Check if email and password is exist in database or not
         if email != i["email"]:
             return {"error": "Email is not registered"}, 409
         if password != i["password"]:
             return {"error": "Your password is wrong"}, 409
+    return {"message": "login success"}

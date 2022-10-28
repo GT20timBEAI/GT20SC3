@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine, text
 import re
 
+user_jwt = 'e58c6b9bddf9491fb624632e0f704306'
+
 
 def symbol(string):
     symbol = "!~`@#$%^&*()_-+=]}[{\n|';:/?>.<,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
