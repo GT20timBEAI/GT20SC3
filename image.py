@@ -1,8 +1,8 @@
-from flask import Blueprint
-from PIL import Image
-image_bp = Blueprint(image, __name__, url_prefix="/image/<path.urlPath>")
+from flask import Blueprint, send_file
+import io
+image_bp = Blueprint("image", __name__, url_prefix="/image/<path:urlPath>")
 
 
 @image_bp.route("", methods=["GET"])
 def getImage(urlPath):
-    image = Image.open
+    return send_file(f"image/{urlPath}")

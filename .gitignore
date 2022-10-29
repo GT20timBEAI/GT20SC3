@@ -6,5 +6,6 @@ __pycache__/
 
 gt20/
 
+image/
 # SQLite
 *.db

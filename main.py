@@ -29,7 +29,7 @@ def create_app():
 
     # always register your blueprint(s) when creating application
     blueprints = [signup_bp, login_bp, products_bp, home_bp,
-                  categories_bp, cart_bp, shipping_bp, user_bp]
+                  categories_bp, cart_bp, shipping_bp, user_bp, image_bp]
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
 
