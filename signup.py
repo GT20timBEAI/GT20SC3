@@ -92,9 +92,6 @@ def signup():
         elif symbol(phone):
             return {"error": "Phone number only containing numbers"}, 400
         for i in users:
-            print("hai")
-            print(phone)
-            print(i["phone_number"])
             if email == i["email"]:
                 return {"error": "email already exist"}, 409
             if phone == i["phone_number"]:
