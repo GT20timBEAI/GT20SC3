@@ -3,6 +3,7 @@ from enum import unique
 from flask import Flask
 import os
 from signup import signup_bp
+from image import image_bp
 from utils import get_engine
 from products import products_bp
 from home import home_bp

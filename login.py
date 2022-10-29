@@ -69,28 +69,31 @@ def token_required(f):
 
 @login_bp.route("", methods=["POST"])
 def login():
-    body = request.json
-    email, password = body['email'], body['password']
-    cred_test = run_query("select * from users")
+    try:
+        body = request.json
+        email, password = body['email'], body['password']
+        cred_test = run_query("select * from users")
 
-    # TODO: Test user Password
-    if len(password) < 8:
-        return {"error": "Password must contain at least 8 characters"}, 400
-    elif not any(filter(str.islower, password)):
-        return {"error": "Password must contain a lowercase letter"}, 400
-    elif not any(filter(str.isupper, password)):
-        return {"error": "Password must contain an uppercase letter"}, 400
-    elif not any(filter(str.isdigit, password)):
-        return {"error": "Password must contain a number"}, 400
+        # TODO: Test user Password
+        if len(password) < 8:
+            return {"error": "Password must contain at least 8 characters"}, 400
+        elif not any(filter(str.islower, password)):
+            return {"error": "Password must contain a lowercase letter"}, 400
+        elif not any(filter(str.isupper, password)):
+            return {"error": "Password must contain an uppercase letter"}, 400
+        elif not any(filter(str.isdigit, password)):
+            return {"error": "Password must contain a number"}, 400
 
-    # TODO: Test user Email
-    if inValid(email):
-        return {"error": "your email is wrong"}, 400
+        # TODO: Test user Email
+        if inValid(email):
+            return {"error": "your email is wrong"}, 400
 
-    # TODO: Check if email and password is exist in database or not
-    for i in cred_test:
-        if email != i['email']:
-            return {"error": "Email is not registered"}, 409
-        if password != i['password']:
-            return {"error": "Your password is wrong"}, 409
-        return {'user_information': {'name': i['name'], 'email': 'darulcrypto@gmail.com', 'phone number': i['phone_number'], 'type': i['is_admin']}, 'token': testToken, 'message': 'Login succes'}
+        # TODO: Check if email and password is exist in database or not
+        for i in cred_test:
+            if email != i['email']:
+                return {"error": "Email is not registered"}, 409
+            if password != i['password']:
+                return {"error": "Your password is wrong"}, 409
+            return {'user_information': {'name': i['name'], 'email': 'darulcrypto@gmail.com', 'phone number': i['phone_number'], 'type': i['is_admin']}, 'token': testToken, 'message': 'Login succes'}
+    except KeyError:
+        return {"error": "email and password are not given"}, 400
