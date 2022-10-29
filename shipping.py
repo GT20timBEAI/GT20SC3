@@ -23,3 +23,5 @@ def getOrder():
 @shipping_bp.route("/sales", methods=["GET"])
 def gettotalsales():
     pass
+
+

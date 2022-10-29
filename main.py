@@ -1,11 +1,12 @@
 
 from flask import Flask
 import os
+from image import image_bp
 from signup import signup_bp
 from utils import get_engine
 from products import products_bp
 from home import home_bp
-from login import login_bp, testToken
+from login import login_bp
 from categories import categories_bp
 from cart import cart_bp
 from shipping import shipping_bp
@@ -25,7 +26,7 @@ def create_app():
     app = Flask(__name__)
 
     # always register your blueprint(s) when creating application
-    blueprints = [signup_bp, login_bp, products_bp, home_bp, categories_bp, cart_bp, shipping_bp, user_bp]
+    blueprints = [signup_bp, login_bp, products_bp, home_bp, categories_bp, cart_bp, shipping_bp, user_bp, image_bp]
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
 

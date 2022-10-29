@@ -13,8 +13,6 @@ product_name    name
 """
 
 
-
-
 from flask import Blueprint
 
 
