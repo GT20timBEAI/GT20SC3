@@ -31,11 +31,14 @@ Requirements (from the earliest to check):
 - if password is wrong
     - return {"error": "Your password is wrong"}
     - status code: 409
+- if between email or passwor not entered
+    return {"error" : "Email or password not entered"}
+    status code : 400
 - if everything is corect
     - return {"user_information" : {
-        "name": "Raihan Parlaungan",
-        "email": "raihan@gmail.com",
-        "phone_number": "08138073126",
+        "name": name user,
+        "email": email user,
+        "phone_number": user number,
         "type:" : "buyer"( there are 2 types of user, "buyer" and "seller"
         } , "token" :  "jwt_token" , "message" : "Login success" }
 """

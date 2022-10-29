@@ -46,6 +46,9 @@ Requirements (from the earliest to check):
 - if phone number already used
     - return {"error": "phone number already exist"}
     - status code: 409
+- if request between name, email, phone number not entered:
+    return {"error" : "Email, password, name, phone number not entered"}
+    status code : 400
 - if everything is correct 
     - return {"message": "success, user created"}
     - status code: 201
