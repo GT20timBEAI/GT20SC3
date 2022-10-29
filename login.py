@@ -39,15 +39,14 @@ Requirements (from the earliest to check):
         "type:" : "buyer"( there are 2 types of user, "buyer" and "seller"
         } , "token" :  "jwt_token" , "message" : "Login success" }
 """
-
 import jwt
 from flask import Blueprint, request
-from utils import run_query, inValid, user_jwt
+from utils import run_query, inValid
 
 login_bp = Blueprint("login", __name__, url_prefix="/login")
 
 # import your jwt token to this variabel for testing
-testToken = user_jwt
+testToken = None
 # untuk request cek di scr
 
 
@@ -90,10 +89,21 @@ def login():
 
         # TODO: Check if email and password is exist in database or not
         for i in cred_test:
-            if email != i['email']:
-                return {"error": "Email is not registered"}, 409
-            if password != i['password']:
+            if email == i['email']:
+                # return {"error": "Email is not registered"}, 409
+                if password == i['password']:
+                    token = jwt.encode(
+                        {"email": email, "password": password}, 'apaantuh', algorithm="HS256")
+                    type = "buyer" if i["is_admin"] == 0 else "seller"
+                    return {'user_information': {
+                        'name': i['name'],
+                        'email': i['email'],
+                        'phone number': i['phone_number'],
+                        'type': type},
+                        'token': token,
+                        'message': 'Login succes'}, 200
                 return {"error": "Your password is wrong"}, 409
-            return {'user_information': {'name': i['name'], 'email': 'darulcrypto@gmail.com', 'phone number': i['phone_number'], 'type': i['is_admin']}, 'token': testToken, 'message': 'Login succes'}
+            return {"error": "Email is not registered"}, 409
+
     except KeyError:
         return {"error": "email and password are not given"}, 400

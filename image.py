@@ -1,5 +1,4 @@
 from flask import Blueprint, send_file
-import io
 image_bp = Blueprint("image", __name__, url_prefix="/image/<path:urlPath>")
 
 
