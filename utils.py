@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, text
 import re
+import os
 
 
 def symbol(string):
@@ -9,12 +10,27 @@ def symbol(string):
             return True
 
 
-def name_symbol(name):
-    regex = re.compile("[a-zA-Z0-9 ]")
-    if re.fullmatch(regex, name):
-        return False
-    else:
-        return True
+# def name_symbol(name):
+#     regex = re.compile("[a-zA-Z0-9 ]")
+#     if re.fullmatch(regex, name):
+#         return False
+#     else:
+#         return True
+
+def serve_image(urlPath):
+    with open(f"image/{urlPath}", "rb") as image:
+        f = image.read()
+        return f
+
+
+def extensionImage(image):
+    allow = ['jpg', 'png']
+    extension = image.split('.')[1]
+
+    if extension not in allow:
+        os.abort()
+
+    return extension
 
 
 def inValid(email):

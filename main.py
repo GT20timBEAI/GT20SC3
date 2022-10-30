@@ -1,13 +1,11 @@
-from email.policy import default
-from enum import unique
 from flask import Flask
 import os
-from signup import signup_bp
 from image import image_bp
+from signup import signup_bp
 from utils import get_engine
 from products import products_bp
 from home import home_bp
-from login import login_bp, testToken
+from login import login_bp
 from categories import categories_bp
 from cart import cart_bp
 from shipping import shipping_bp
@@ -20,8 +18,6 @@ from sqlalchemy import (
     create_engine,
     Integer,
 )
-from sqlalchemy.dialects.postgresql import UUID
-import uuid
 
 
 def create_app():
@@ -60,6 +56,13 @@ def create_app():
 
 app = create_app()
 
+
+class IsString:
+    def __eq__(self, other):
+        return isinstance(other, str)
+
+    def __repr__(self):
+        return "<must_be_a_string>"
 # =======================================================
 #                     TESTING
 # =======================================================
@@ -86,7 +89,7 @@ if __name__ == "__main__":
     assert_eq(register_user_response.status_code, 201)
     num = 1
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f" [task {num} passed ] succes created user                         ")
     print("==================================================")
     num += 1
     # password incorect(less than 8 character)
@@ -101,7 +104,8 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f"[task {num} passed ] Password less than 8 letters                         ")
     print("==================================================")
     num += 1
     # password incorect(doesn't contain any lowercase letters)
@@ -116,7 +120,8 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f"[task {num} passed ] Password not contain lowercase letter                        ")
     print("==================================================")
     num += 1
 
@@ -132,9 +137,9 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f"[task {num} passed ] Password not contain uppercase letter                         ")
     print("==================================================")
-    num += 1
 
     # password incorect(doesn't contain any numbers)
     register_user_response = c.post(
@@ -148,7 +153,8 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f" [task {num} passed ] password must contain a number                         ")
     print("==================================================")
     num += 1
 
@@ -160,11 +166,12 @@ if __name__ == "__main__":
     )
     assert_eq(
         register_user_response.json,
-        {"error": "name must contain at least 5 characters"},
+        {"error": "name must contain at least 5 character"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f" [task {num} passed ] name must contain at least 5 character                       ")
     print("==================================================")
     num += 1
 
@@ -176,11 +183,11 @@ if __name__ == "__main__":
     )
     assert_eq(
         register_user_response.json,
-        {"error": "name only contains of alphabet"},
+        {"error": "name just alphabet"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f" [task {num} passed ] name just alphabet                        ")
     print("==================================================")
     num += 1
 
@@ -196,7 +203,7 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES            ")
+    print(f"  [task {num} passed ] Email is wrong           ")
     print("==================================================")
     num += 1
 
@@ -212,7 +219,7 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f" [task {num} passed ] Email is wrong                        ")
     print("==================================================")
     num += 1
 
@@ -228,7 +235,7 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f"    [task {num} passed ] Email is wrong                         ")
     print("==================================================")
     num += 1
 
@@ -244,7 +251,7 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f"   [task {num} passed ] Email is wrong                          ")
     print("==================================================")
     num += 1
 
@@ -256,11 +263,12 @@ if __name__ == "__main__":
     )
     assert_eq(
         register_user_response.json,
-        {"error": "Phone number must contain 12 characters"},
+        {"error": "phone must contain less than 12 character"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f"[task {num} passed ] phone must contain less than 12 character                        ")
     print("==================================================")
     num += 1
 
@@ -272,11 +280,12 @@ if __name__ == "__main__":
     )
     assert_eq(
         register_user_response.json,
-        {"error": "Phone number only containing numbers"},
+        {"error": "phone just containt number"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f" [task {num} passed ] phone just containt number                         ")
     print("==================================================")
     num += 1
 
@@ -292,7 +301,8 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 409)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f"   [task {num} passed ] email already exist                        ")
     print("==================================================")
     num += 1
 
@@ -308,7 +318,8 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 409)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f" [task {num} passed ] phone number already exist                         ")
     print("==================================================")
     num += 1
 
@@ -324,15 +335,33 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 201)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f"       [task {num} passed ] success, user created                      ")
     print("==================================================")
     num += 1
+
+    # request not input
+    register_user_response = c.post(
+        "/sign-up",
+        json={"password": "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "Email, password, name, phone number not entered"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+    print("==================================================")
+    print(
+        f"       [task {num} passed ] success, user created                      ")
+    print("==================================================")
 
     """
     ================================================
                     TESTING LOGIN
     ================================================
     """
+
+    print("\n\n\n\n             L O G I N")
     num = 1
     # password is less than 8 characters
     register_user_response = c.post(
@@ -344,8 +373,9 @@ if __name__ == "__main__":
         {"error": "Password must contain at least 8 characters"},
     )
     assert_eq(register_user_response.status_code, 400)
-    print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print("\n\n\n\n\n==================================================")
+    print(
+        f" [Task {num}] password is less than 8 characters                        ")
     print("==================================================")
     num += 1
 
@@ -360,7 +390,8 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f"[Task {num}] password doesn't contain any lowercase                     ")
     print("==================================================")
     num += 1
 
@@ -375,7 +406,8 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f"[Task {num}] password doesn't contain any lowercase                    ")
     print("==================================================")
     num += 1
 
@@ -390,7 +422,8 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(
+        f"[Task {num}] password doesn't contain any lowercase                     ")
     print("==================================================")
     num += 1
 
@@ -405,7 +438,7 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f"            [Task {num}] testing email                       ")
     print("==================================================")
     num += 1
 
@@ -420,7 +453,7 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f"        [Task {num}] testing email                       ")
     print("==================================================")
     num += 1
 
@@ -435,7 +468,7 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f"            [Task {num}] testing email                      ")
     print("==================================================")
     num += 1
 
@@ -450,7 +483,7 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 409)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f"      [Task {num}]  email not registered                     ")
     print("==================================================")
     num += 1
 
@@ -465,12 +498,27 @@ if __name__ == "__main__":
     )
     assert_eq(register_user_response.status_code, 409)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f"            [Task {num}]  password wrong                  ")
+    print("==================================================")
+    num += 1
+
+    # not entered email or password
+    register_user_response = c.post(
+        "/login",
+        json={"password": "Ab123456"},
+    )
+    assert_eq(
+        register_user_response.json,
+        {"error": "Email or password not entered"},
+    )
+    assert_eq(register_user_response.status_code, 400)
+    print("==================================================")
+    print(
+        f"   [Task {num}]  not entered email or password                    ")
     print("==================================================")
     num += 1
 
     # succesful login
-
     register_user_response = c.post(
         "/login",
         json={"email": "darulcrypto@gmail.com", "password": "Ab123456"},
@@ -479,12 +527,13 @@ if __name__ == "__main__":
         register_user_response.json,
         {"user_information": {"name": "darul",
                               "email": "darulcrypto@gmail.com",
-                              "phone_number": "085268487440",
-                              "type:": "buyer"
-                              }, "token":  testToken, "message": "Login succes"},
+                              "phone_number": "6285268487440",
+                              "type:": "buyer"},
+         "message": "Login succes", "token":  IsString()
+         }
     )
     assert_eq(register_user_response.status_code, 200)
     print("==================================================")
-    print(f"                      TEST {num} SUCCES                         ")
+    print(f"           [Task {num}] succesful login                      ")
     print("==================================================")
     num += 1

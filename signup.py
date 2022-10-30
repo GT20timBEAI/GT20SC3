@@ -52,7 +52,7 @@ Requirements (from the earliest to check):
 """
 
 from flask import Blueprint, request
-from utils import inValid, symbol, name_symbol, run_query
+from utils import inValid, symbol, run_query
 
 signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
 
