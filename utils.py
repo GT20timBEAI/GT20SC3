@@ -1,5 +1,23 @@
 from sqlalchemy import create_engine, text
 import re
+import os
+
+#TODO: convert image to bytes
+def serveImage(urlPath):
+    with open(f"image/{urlPath}", "rb") as image:
+        f = image.read()
+        return f
+
+
+ #TODO: get extension
+def extensionImage(image):
+    allow = ['jpg', 'png']
+    extension = image.split('.')[1]
+
+    if extension not in allow:
+        os.abort()
+    
+    return extension
 
 # check number
 def symbol(string):

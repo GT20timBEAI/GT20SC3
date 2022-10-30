@@ -1,3 +1,24 @@
+"""
+- response get banner
+        {
+            "data": [
+            {
+                "id": "uuid",
+                "image": "/banner/image.png",
+                "title": "lorem ipsum blablabla"
+            }
+            ]
+        }
+
+"""
+
+
+
+
+
+
+
+
 from flask import Blueprint
 
 
