@@ -60,6 +60,7 @@ Requirements (from the earliest to check):
 
 from flask import Blueprint,request
 from utils import inValid, run_query, symbol
+import uuid
 
 signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
 
@@ -87,10 +88,10 @@ def signup():
 
         # TODO: email requirements
         elif inValid(email): return {"error": "your email is wrong"}, 400
-        elif len(phone) < 12: return {"error": "phone must contain less than 12 character"},400
 
         #TODO: phone number requirements
         elif symbol(phone): return {"error": "phone just containt number"},400
+        elif len(phone) < 12: return {"error": "phone must contain less than 12 character"},400
 
         #TODO: email and phone exist in database
         for i in users:
@@ -99,7 +100,8 @@ def signup():
 
 
         #TODO Succesfull
-        run_query(f"insert into users(name, email, phone_number, password, is_admin) values(\'{name}\',\'{email}\',{phone},\'{password}\',0)", True)
+        id = uuid.uuid4()
+        run_query(f"insert into Users(id, name, email, phone_number, password, is_admin) values(\'{id}\',\'{name}\',\'{email}\',{phone},\'{password}\',0)", True)
         return {"message": "success, user created"}, 201
 
     except:

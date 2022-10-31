@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, text
 import re
-import os
+
 
 #TODO: convert image to bytes
 def serveImage(urlPath):
@@ -13,10 +13,7 @@ def serveImage(urlPath):
 def extensionImage(image):
     allow = ['jpg', 'png']
     extension = image.split('.')[1]
-
-    if extension not in allow:
-        os.abort()
-    
+    if extension not in allow or '.' not in image:return False
     return extension
 
 # check number
@@ -25,7 +22,7 @@ def symbol(string):
     for i in string:
         if i in symbol: return True
         
-
+#TODO: check email valid or not
 def inValid(email):
     regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
     if re.fullmatch(regex, email):

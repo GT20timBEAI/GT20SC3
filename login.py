@@ -55,8 +55,8 @@ from utils import run_query, inValid
 import jwt
 
 
-login_bp = Blueprint("login", __name__, url_prefix="/login")
-testToken = None
+login_bp = Blueprint("login", __name__, url_prefix="/signin")
+
 
 # untuk request cek di scr
 @login_bp.route("", methods=["POST"])
@@ -78,7 +78,7 @@ def login():
         # TODO email requirements
         elif inValid(email): return {"error": "your email is wrong"}, 400
 
-        users = run_query("select * from users")
+        users = run_query("select * from Users")
         for i in users:
             if i["email"] == email:
                 if i["password"] == password:
@@ -93,7 +93,7 @@ def login():
                                 "phone_number": i["phone_number"],
                                 "type:" : type} ,
                             "message" : "Login success",
-                            "token" :  token ,  }, 200
+                            "token" :  str(token)   }, 200
                 return {"error": "Your password is wrong"},409
 
         return {"error": "Email is not registered"}, 409
