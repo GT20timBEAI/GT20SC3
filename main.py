@@ -22,6 +22,7 @@ from sqlalchemy import (
     DateTime,
     CHAR,
     Text,
+    ForeignKey,
 )
 
 

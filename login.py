@@ -80,7 +80,7 @@ def login():
                         {"email": email, "password": password}, 'apaantuh', algorithm="HS256")
                     type = "buyer" if i["is_admin"] == 0 else "seller"
                     run_query(
-                        f"update Users set token = {token} where email={email}", True)
+                        f"update Users set token=\"{token}\" where email=\"{email}\"", True)
                     return {'user_information': {
                         'name': i['name'],
                         'email': i['email'],
