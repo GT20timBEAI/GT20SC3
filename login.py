@@ -50,22 +50,6 @@ testToken = None
 # untuk request cek di scr
 
 
-def token_required(f):
-    @wraps(f)
-    def decorator(*args, **kwargs):
-        token = request.args.get('token')
-        if not token:
-            return {"Error": "Authentication is failed"}, 400
-
-        try:
-            result = jwt.decode(
-                token, user_jwt, algorithms=["HS256"])
-        except:
-            return {"Authentication Failed 2"}
-        return f(*args, **kwargs)
-    return decorator
-
-
 @login_bp.route("", methods=["POST"])
 def login():
     try:
@@ -95,6 +79,8 @@ def login():
                     token = jwt.encode(
                         {"email": email, "password": password}, 'apaantuh', algorithm="HS256")
                     type = "buyer" if i["is_admin"] == 0 else "seller"
+                    run_query(
+                        f"update Users set token = {token} where email={email}", True)
                     return {'user_information': {
                         'name': i['name'],
                         'email': i['email'],

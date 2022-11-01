@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine, text
 import re
-import os
+from datetime import datetime as dt
 
 
 def symbol(string):
@@ -17,6 +17,19 @@ def symbol(string):
 #     else:
 #         return True
 
+def validUser(token, buyer: bool = False):
+    users = run_query("select * from Users")
+    cek = 1 if buyer else 0
+    for i in users:
+        if token == i['token'] and i['is_admin'] == cek:
+            return True
+    return False
+
+
+def timeNow():
+    return dt.now().strftime("%A, %d, %B, %Y")
+
+
 def serve_image(urlPath):
     with open(f"image/{urlPath}", "rb") as image:
         f = image.read()
@@ -28,7 +41,7 @@ def extensionImage(image):
     extension = image.split('.')[1]
 
     if extension not in allow:
-        os.abort()
+        return False
 
     return extension
 

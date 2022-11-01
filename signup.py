@@ -53,6 +53,7 @@ Requirements (from the earliest to check):
 
 from flask import Blueprint, request
 from utils import inValid, symbol, run_query
+import uuid
 
 signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
 
@@ -96,8 +97,11 @@ def signup():
                 return {"error": "email already exist"}, 409
             if phone == i["phone_number"]:
                 return {"error": "phone number already exist"}, 409
+
+        id = uuid.uuid4()
         run_query(
-            f"insert into users(name, email, phone_number, password, is_admin) values(\'{name}\',\'{email}\',{phone},\'{password}\',0)", True)
+            f"insert into users(id, name, email, phone_number, password, is_admin) values(\'{id}\',\'{name}\',\'{email}\',{phone},\'{password}\',0)", True)
         return {"message": "success, user created"}, 201
+
     except KeyError:
         return {"error": "all requirement are not given"}, 400

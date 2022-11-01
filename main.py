@@ -1,8 +1,10 @@
 from flask import Flask
 import os
+import uuid
+import datetime
 from image import image_bp
 from signup import signup_bp
-from utils import get_engine
+from utils import get_engine, timeNow
 from products import products_bp
 from home import home_bp
 from login import login_bp
@@ -17,6 +19,9 @@ from sqlalchemy import (
     String,
     create_engine,
     Integer,
+    DateTime,
+    CHAR,
+    Text,
 )
 
 
@@ -40,14 +45,81 @@ def create_app():
     engine = get_engine()
     meta = MetaData()
     Table(
-        "users",
+        "Users",
         meta,
-        Column("id", Integer, primary_key=True),
+        Column("id", String, primary_key=True),
         Column("name", String, nullable=False),
         Column("email", String, nullable=False, unique=True),
         Column("phone_number", String, nullable=False, unique=True),
         Column("password", String, nullable=False),
-        Column("is_admin", Integer, nullable=True, default=0)
+        Column("is_admin", Integer, nullable=True, default=0),
+        Column("token", Text)
+    )
+
+    Table(
+        "Product_List",
+        meta,
+        Column("id", String, primary_key=True),
+        Column("category_id", String, ForeignKey(
+            "Category.category_id"), nullable=False),
+        Column("product_name", String, nullable=False, unique=True),
+        Column("condition", String, nullable=False),
+        Column("price", Integer, nullable=False),
+        Column("product_detail", String, nullable=True),
+        Column("image_url", String, nullable=False)
+    )
+
+    Table(
+        "Banner",
+        meta,
+        Column("product_id", String, ForeignKey(
+            "Product_List.id"), nullable=False),
+        Column("image", String, nullable=False, unique=True)
+    )
+
+    Table(
+        "Category",
+        meta,
+        Column("category_id", String, primary_key=True),
+        Column("category_name", String, nullable=False)
+    )
+
+    Table(
+        "Orders",
+        meta,
+        Column("order_id", String, primary_key=True),
+        Column("created_at", DateTime, default=timeNow())
+    )
+
+    Table(
+        "Cart",
+        meta,
+        Column("item_id", String, ForeignKey(
+            "Product_List.id"), nullable=False),
+        Column("user_id", String, ForeignKey("Users.id"), nullable=False),
+        Column("order_id", String, ForeignKey(
+            "Orders.order_id"), nullable=False),
+        Column("quantity", Integer, nullable=False),
+        Column("size", String, nullable=False),
+        Column("status", String, nullable=False),
+        Column("shipping_method", String, nullable=False)
+    )
+
+    Table(
+        "Buyer_Shipping",
+        meta,
+        Column("user_id", String, ForeignKey("Users.id"), nullable=False),
+        Column("address", String, nullable=False),
+        Column("city", String, nullable=False),
+        Column("balance", Integer, nullable=False)
+    )
+
+    Table(
+        "Size_Available",
+        meta,
+        Column("product_id", String, ForeignKey(
+            "Product_List.id"), nullable=False),
+        Column("size", CHAR, nullable=False)
     )
     meta.create_all(engine)
 
@@ -57,12 +129,12 @@ def create_app():
 app = create_app()
 
 
-class IsString:
-    def __eq__(self, other):
-        return isinstance(other, str)
+# class IsString:
+#     def __eq__(self, other):
+#         return isinstance(other, str)
 
-    def __repr__(self):
-        return "<must_be_a_string>"
+#     def __repr__(self):
+#         return "<must_be_a_string>"
 # =======================================================
 #                     TESTING
 # =======================================================
