@@ -13,36 +13,58 @@ product_name    name
 """
 
 
-
-
-from flask import Blueprint
+from flask import Blueprint, request
+from utils import run_query, validUser
 
 
 products_bp = Blueprint("products", __name__, url_prefix="/products")
 
 # untuk request cek di scr
+
+
 @products_bp.route("", methods=["GET"])
 def productlist():
     pass
+
 
 @products_bp.route("/search_image", methods=["POST"])
 def searchimage():
     pass
 
+
 @products_bp.route("/{id}", methods=["POST"])
 def productDetailPage():
     pass
 
+
 @products_bp.route("", methods=["POST"])
 def createProduct():
-    pass
+    try:
+        jwt_token = request.headers.get('token')
+        body = request.json
+        product_name, description, images = body['product_name'], body['product_detail'], body['image_url']
+        condition, category, price = body['condition'], body['category_id'], body['price']
+
+        if not validUser(jwt_token, True):
+            return {"error": "user not valid"}, 400
+
+        # FIXME: Buat algoritma buat nyimpan url
+        listImages = []
+
+        id = uuid.uuid4()
+        run_query("insert into Product_List(id, category_id, product_name, condition, price, product_detail, image_url\
+            values(\'{id}\', \'{category}\', \'{product_name}\', \'{condition}\', \'{price}\', \'{description}\', \'{listImages}\')", True)
+        return {"message": "Product added"}
+    except KeyError:
+        return {"message": "error, user already exist"}
+
 
 @products_bp.route("/{category_id}", methods=["PUT"])
 def UpdateProducts():
     pass
 
 
-#delete products softs
+# delete products softs
 @products_bp.route("", methods=["DELETE"])
 def DeleteProducts():
     pass
