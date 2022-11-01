@@ -173,11 +173,11 @@ if __name__ == "__main__":
     )
     assert_eq(
         register_user_response.json,
-        {"error": "name just alphabet"},
+        {"error": "name only contain letters"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f" [task {num} passed ] name just alphabet                        ")
+    print(f" [task {num} passed ] name only contain letters                        ")
     print("==================================================")
     num+=1
     
@@ -263,11 +263,11 @@ if __name__ == "__main__":
     )
     assert_eq(
         register_user_response.json,
-        {"error": "phone just containt number"},
+        {"error": "phone can only containt number"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f" [task {num} passed ] phone just containt number                         ")
+    print(f" [task {num} passed ] phone can only containt number                         ")
     print("==================================================")
     num+=1
     

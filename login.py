@@ -45,7 +45,9 @@ Requirements (from the earliest to check):
 
 
 
-from flask import Blueprint
+from flask import Blueprint, request
+from utils import run_query
+import jwt
 
 login_bp = Blueprint("login", __name__, url_prefix="/login")
 
@@ -55,4 +57,20 @@ testToken = None
 # untuk request cek di scr
 @login_bp.route("", methods=["POST"])
 def login():
-    pass
+    body = request.json
+    email = body["email"]
+    password = body["password"]
+    
+    try:
+        users = run_query("select * from Users")
+        for i in users:
+            if i["email"] == email:
+                if i["password"] == password:
+                    token = jwt.encode({"email" : email, "password" : password}, "inirahasiakita", algorithm="HS256")
+                        # jwt.decode(token, "inirahasiakita", algorithms=["RS256"]
+                    type = "buyer" if i["is_admin"] == 0  else "seller"
+                    return {"user_information" : {"name": i["name"],"email": email,"phone_number": i["phone_number"],"type:" : type} ,"message" : "Login success","token" :  str(token)}, 200
+                return {"error": "Your password is wrong"},409
+            return {"error": "Email is not registered"}, 409
+    except:
+        return {"error" : "Email or password not entered"}, 400

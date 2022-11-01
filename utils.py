@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine, text
+import re
 
 def get_engine():
     """Creating SQLite Engine to interact"""
@@ -22,7 +23,19 @@ def run_query(query, commit: bool = False):
         else:
             return [dict(row) for row in conn.execute(query)]
 
+def check_email(email):
+    regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 
+    if re.fullmatch(regex, email):
+        return False
+    else:
+        return True
+
+def check_number(string):
+    symbol = "!~`@#$%^&*()_-+=]}[{\n|';:/?>.<,abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    for i in string:
+        if i in symbol: 
+            return True
 ##############################################################################################
 # FOR TESTING
 ##############################################################################################
