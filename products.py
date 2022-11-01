@@ -13,7 +13,9 @@ product_name    name
 """
 
 
-from flask import Blueprint
+from flask import Blueprint, request
+from utils import run_query, validUser
+import uuid
 
 
 products_bp = Blueprint("products", __name__, url_prefix="/products")
@@ -31,9 +33,36 @@ def searchimage():
 def productDetailPage():
     pass
 
+# TODO: in admin page
 @products_bp.route("", methods=["POST"])
 def createProduct():
-    pass
+    jwt_token = request.headers.get("jwt_token")
+    body = request.json
+    product_name = body["product_name"]
+    description = body["description"]
+    images = body["images"]
+    condition = body["condition"]
+    category = body["category_id"]
+    price = body["price"]
+    
+    if not validUser(jwt_token, True): return {"error" : "user not valid"}, 400
+
+    #FIXME: save image to folder image
+    # save url directory with name image to list image
+    listImages =[] # ==> save to this for insert to database
+
+
+    #TODO: make requirements
+
+
+    #TODO: insert into database product_list
+    id = uuid.uuid4() # ==> id  product with uuid
+    run_query(f"insert into Product_list(id, category_id,\
+            product_name,condition, price, product_detail, image_url)\
+            values(\'{id}\', \'{category}\', \'{product_name}\', \'{condition}\',\
+            {price}, \'{description}\', {listImage})",True)
+    return {"message" : "Product added"},200
+
 
 @products_bp.route("/{category_id}", methods=["PUT"])
 def UpdateProducts():

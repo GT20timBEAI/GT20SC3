@@ -51,21 +51,20 @@ def create_app():
         Column("email", String, nullable=False, unique= True),
         Column("phone_number", String, nullable=False, unique=True),
         Column("password", String, nullable=False),
-        Column("is_admin", Integer, nullable=True)
+        Column("is_admin", Integer, nullable=True),
+        Column("token", String, nullable=True)
     )
 
     Table(
         "Product_list",
         meta,
         Column("id", String, primary_key= True),
-        Column("category_id", String, nullable=False),
+        Column("category_id", Integer, nullable=False),
         Column("product_name", String, nullable=False, unique= True),
         Column("condition", String, nullable=False),
         Column("price", Integer, nullable=False),
         Column("product_detail", String, nullable=True),
-        Column("image_url", String, nullable=False),
-        Column("size", Integer, nullable=True),
-        Column("created_at", Integer, nullable=True)
+        Column("image_url", String, nullable=False)
     )
     meta.create_all(engine)
 

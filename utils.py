@@ -1,6 +1,20 @@
 from sqlalchemy import create_engine, text
 import re
+from datetime import datetime as dt
 
+#TODO: time now
+def timeNow():
+    return dt.now().strftime("%A, %d %B %Y")
+
+
+#TODO: valid users(True for seller, False for Buyer)
+def validUser(token, buyer: bool = False):
+    users = run_query("select * from Users")
+    cek = 1 if buyer else 0
+    for i in users:
+        if token == i["token"] and i["is_admin"] == cek:
+            return True
+    return False
 
 #TODO: convert image to bytes
 def serveImage(urlPath):

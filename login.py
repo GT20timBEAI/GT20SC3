@@ -54,7 +54,6 @@ from flask import Blueprint, request
 from utils import run_query, inValid
 import jwt
 
-
 login_bp = Blueprint("login", __name__, url_prefix="/signin")
 
 
@@ -87,6 +86,7 @@ def login():
                     algorithm="HS256")
                     # jwt.decode(token, "inirahasiakita", algorithms=["RS256"]
                     type = "buyer" if i["is_admin"] == 0  else "seller"
+                    run_query(f"update users set token={token} where email={email}", True)
                     return {"user_information" : {
                                 "name": i["name"],
                                 "email": email,
