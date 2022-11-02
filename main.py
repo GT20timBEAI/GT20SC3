@@ -4,7 +4,7 @@ import uuid
 import datetime
 from image import image_bp
 from signup import signup_bp
-from utils import get_engine, timeNow
+from utils import get_engine, timeNow, run_query
 from products import products_bp
 from home import home_bp
 from login import login_bp
@@ -51,7 +51,7 @@ def create_app():
         Column("id", String, primary_key=True),
         Column("name", String, nullable=False),
         Column("email", String, nullable=False, unique=True),
-        Column("phone_number", String, nullable=False, unique=True),
+        Column("phone_number", Integer, nullable=False, unique=True),
         Column("password", String, nullable=False),
         Column("is_admin", Integer, nullable=True, default=0),
         Column("token", Text)
@@ -82,7 +82,7 @@ def create_app():
         "Category",
         meta,
         Column("category_id", String, primary_key=True),
-        Column("category_name", String, nullable=False)
+        Column("category_name", String, nullable=False, unique=True)
     )
 
     Table(
@@ -129,6 +129,10 @@ def create_app():
 
 app = create_app()
 
+# TODO: Make user admin
+id = uuid.uuid4()
+run_query("insert into Users(id, name, email, phone_number, password, is_admin) \
+    values(\"{id}\", \"Suryana\", \"suryana@gmail.com\", 6282134657895, \"Asdfghjkl123\", 1)", True)
 
 # class IsString:
 #     def __eq__(self, other):
