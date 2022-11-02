@@ -46,31 +46,50 @@ Requirements (from the earliest to check):
 
 
 from flask import Blueprint, request
-from utils import run_query
+from utils import run_query, inValid
 import jwt
 
-login_bp = Blueprint("login", __name__, url_prefix="/login")
+login_bp = Blueprint("login", __name__, url_prefix="/signin")
 
-#import your jwt token to this variabel for testing
-testToken = None
 
 # untuk request cek di scr
 @login_bp.route("", methods=["POST"])
 def login():
-    body = request.json
-    email = body["email"]
-    password = body["password"]
-    
     try:
+        body = request.json
+        email, password = body["email"], body["password"]
+
+        if len(password) < 8:
+            return {"error": "Password must contain at least 8 characters"},400
+        elif any(i.islower() for i in password) == False:
+            return {"error": "Password must contain a lowercase letter"}, 400
+        elif any(i.isupper() for i in password) == False:
+            return {"error": "Password must contain an uppercase letter"}, 400
+        elif any(c.isdigit() for c in password) == False:
+            return {"error": "Password must contain a number"},400
+
+        elif inValid(email): return {"error": "your email is wrong"}, 400
+
         users = run_query("select * from Users")
         for i in users:
             if i["email"] == email:
                 if i["password"] == password:
-                    token = jwt.encode({"email" : email, "password" : password}, "inirahasiakita", algorithm="HS256")
-                        # jwt.decode(token, "inirahasiakita", algorithms=["RS256"]
+                    token = jwt.encode({"email" : email, "password" : password},
+                    "inirahasiakita", 
+                    algorithm="HS256")
+                    # jwt.decode(token, "inirahasiakita", algorithms=["RS256"]
                     type = "buyer" if i["is_admin"] == 0  else "seller"
-                    return {"user_information" : {"name": i["name"],"email": email,"phone_number": i["phone_number"],"type:" : type} ,"message" : "Login success","token" :  str(token)}, 200
+                    run_query(f"update users set token={token} where email={email}", True)
+                    return {"user_information" : {
+                                "name": i["name"],
+                                "email": email,
+                                "phone_number": i["phone_number"],
+                                "type:" : type} ,
+                            "message" : "Login success",
+                            "token" :  str(token)   }, 200
                 return {"error": "Your password is wrong"},409
-            return {"error": "Email is not registered"}, 409
+
+        return {"error": "Email is not registered"}, 409
+              
     except:
         return {"error" : "Email or password not entered"}, 400

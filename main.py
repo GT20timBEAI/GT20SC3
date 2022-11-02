@@ -1,11 +1,15 @@
+from enum import unique
+from uuid import uuid4
 from flask import Flask
 import os
+import uuid
+from utils import run_query
 from image import image_bp
 from signup import signup_bp
 from utils import get_engine
 from products import products_bp
 from home import home_bp
-from login import login_bp, testToken
+from login import login_bp
 from categories import categories_bp
 from cart import cart_bp
 from shipping import shipping_bp
@@ -40,14 +44,43 @@ def create_app():
     engine = get_engine()
     meta = MetaData()
     Table(
-        "users",
+        "Users",
         meta,
-        Column("id", Integer, primary_key= True),
+        Column("id", String, primary_key= True),
         Column("name", String, nullable=False),
         Column("email", String, nullable=False, unique= True),
         Column("phone_number", String, nullable=False, unique=True),
         Column("password", String, nullable=False),
-        Column("is_admin", Integer, nullable=True, default=0)
+        Column("is_admin", Integer, nullable=True),
+        Column("token", String, nullable=True)
+    )
+
+    Table(
+        "Product_list",
+        meta,
+        Column("id", String, primary_key= True),
+        Column("category_id", Integer, nullable=False),
+        Column("product_name", String, nullable=False, unique= True),
+        Column("condition", String, nullable=False),
+        Column("price", Integer, nullable=False),
+        Column("product_detail", String, nullable=True),
+        Column("image_url", String, nullable=False)
+    )
+    meta.create_all(engine)
+
+    Table(
+        "Banner",
+        meta,
+        Column("id", String, primary_key= True),
+        Column("image", String, nullable=False, unique=True),
+        Column("title", String, nullable=False)
+    )
+
+    Table(
+        "Category",
+        meta,
+        Column("category_id", String, primary_key= True),
+        Column("category_name", String, nullable=False, unique=True)
     )
     meta.create_all(engine)
 
@@ -56,6 +89,12 @@ def create_app():
 
 
 app = create_app()
+
+#TODO: make user admin
+id = uuid.uuid4()
+run_query("insert into Users(id, name, email, phone_number,\
+    password, is_admin) values(\"{id}\", \"Darul\", \"gt20@gmail.com\",\
+        6285268487441, \"Qwerty123\", 1)", True)
 
 class IsString:
     def __eq__(self, other):
@@ -173,11 +212,11 @@ if __name__ == "__main__":
     )
     assert_eq(
         register_user_response.json,
-        {"error": "name only contain letters"},
+        {"error": "name just alphabet"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f" [task {num} passed ] name only contain letters                        ")
+    print(f" [task {num} passed ] name just alphabet                        ")
     print("==================================================")
     num+=1
     
@@ -263,11 +302,11 @@ if __name__ == "__main__":
     )
     assert_eq(
         register_user_response.json,
-        {"error": "phone can only containt number"},
+        {"error": "phone just containt number"},
     )
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
-    print(f" [task {num} passed ] phone can only containt number                         ")
+    print(f" [task {num} passed ] phone just containt number                         ")
     print("==================================================")
     num+=1
     
@@ -341,7 +380,7 @@ if __name__ == "__main__":
     num=1
     # password is less than 8 characters
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail.com", "password" : "ABC"},
     )
     assert_eq(
@@ -356,7 +395,7 @@ if __name__ == "__main__":
     
     # password doesn't contain any lowercase letters 
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail.com", "password" : "ABC123456"},
     )
     assert_eq(
@@ -371,7 +410,7 @@ if __name__ == "__main__":
     
     # password doesn't contain any lowercase letters
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail.com", "password" : "abc123456"},
     )
     assert_eq(
@@ -386,7 +425,7 @@ if __name__ == "__main__":
     
     # password doesn't contain any lowercase letters
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail.com", "password" : "abcABCDE"},
     )
     assert_eq(
@@ -401,7 +440,7 @@ if __name__ == "__main__":
     
     # testing email
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto", "password" : "Ab123456"},
     )
     assert_eq(
@@ -416,7 +455,7 @@ if __name__ == "__main__":
     
     # testing email
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@", "password" : "Ab123456"},
     )
     assert_eq(
@@ -431,7 +470,7 @@ if __name__ == "__main__":
     
     # testing email
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail", "password" : "Ab123456"},
     )
     assert_eq(
@@ -446,7 +485,7 @@ if __name__ == "__main__":
     
     # email not registered
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto7@gmail.com", "password" : "Ab123456"},
     )
     assert_eq(
@@ -461,7 +500,7 @@ if __name__ == "__main__":
     
     # password wrong
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail.com", "password" : "Abc123456"},
     )
     assert_eq(
@@ -476,7 +515,7 @@ if __name__ == "__main__":
 
     # not entered email or password
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"password" : "Ab123456"},
     )
     assert_eq(
@@ -486,25 +525,5 @@ if __name__ == "__main__":
     assert_eq(register_user_response.status_code, 400)
     print("==================================================")
     print(f"   [Task {num}]  not entered email or password                    ")
-    print("==================================================")
-    num+=1
-
-    # succesful login
-    register_user_response = c.post(
-        "/login",
-        json={"email" : "darulcrypto@gmail.com", "password" : "Ab123456"},
-    )
-    assert_eq(
-        register_user_response.json,
-        {"user_information" : {"name": "darul",
-        "email": "darulcrypto@gmail.com",
-        "phone_number": "6285268487440",
-        "type:" : "buyer"},
-        "message": "Login succes","token" :  IsString()
-        }
-    )
-    assert_eq(register_user_response.status_code, 200)
-    print("==================================================")
-    print(f"           [Task {num}] succesful login                      ")
     print("==================================================")
     num+=1

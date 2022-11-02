@@ -36,6 +36,22 @@ def check_number(string):
     for i in string:
         if i in symbol: 
             return True
+
+def serveImage(urlPath):
+    with open(f"image/{urlPath}", "rb") as image:
+        f = image.read()
+        return 
+
+def extensionImage(image):
+    allow = ['jpg', 'png']
+    extension = image.split('.')[1]
+    if extension not in allow or '.' not in image:return False
+    return extension
+
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'png', 'jpg'}
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 ##############################################################################################
 # FOR TESTING
 ##############################################################################################
