@@ -32,9 +32,22 @@ def searchimage():
     pass
 
 
-@products_bp.route("/{id}", methods=["POST"])
-def productDetailPage():
-    pass
+@products_bp.route("/<path:id>", methods=["GET"])
+def productDetailPage(id):
+    try:
+        product_detail = run_query(
+            f"select * from  Product_List where id = {id}")
+        data = {
+            "id": product_detail['id'],
+            "title": product_detail['product_name'],
+            "size": product_detail['size'],
+            "product_detail": product_detail['product_detail'],
+            "price": product_detail['price'],
+            "image_url": product_detail['image_url']
+        }
+        return data, 200
+    except KeyError:
+        return {"message": "error, user already exist"}, 400
 
 
 @products_bp.route("", methods=["POST"])
