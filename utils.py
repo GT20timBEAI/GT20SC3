@@ -17,9 +17,9 @@ def symbol(string):
 #     else:
 #         return True
 
-def validUser(token, buyer: bool = False):
+def validUser(token, seller: bool = False):
     users = run_query("select * from Users")
-    cek = 1 if buyer else 0
+    cek = 1 if seller else 0
     for i in users:
         if token == i['token'] and i['is_admin'] == cek:
             return True
