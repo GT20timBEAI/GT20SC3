@@ -22,6 +22,7 @@ from sqlalchemy import (
     String, 
     create_engine,
     Integer,
+    ForeignKey,
     )
 
 
@@ -57,10 +58,17 @@ def create_app():
     )
 
     Table(
+        "Category",
+        meta,
+        Column("category_id", String, primary_key= True),
+        Column("category_name", String, nullable=False, unique=True)
+    )
+
+    Table(
         "Product_list",
         meta,
         Column("id", String, primary_key= True),
-        Column("category_id", Integer, nullable=False),
+        Column("category_id", String, ForeignKey("Category.category_id")),
         Column("product_name", String, nullable=False, unique= True),
         Column("condition", String, nullable=False),
         Column("price", Integer, nullable=False),
@@ -77,12 +85,6 @@ def create_app():
         Column("title", String, nullable=False)
     )
 
-    Table(
-        "Category",
-        meta,
-        Column("category_id", String, primary_key= True),
-        Column("category_name", String, nullable=False, unique=True)
-    )
     meta.create_all(engine)
 
     return app

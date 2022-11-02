@@ -9,6 +9,13 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+#TODO: check category_id
+def checkIdCategory(id):
+    idCategory = run_query("select category_id from Category")
+    for i in idCategory:
+        if i["category_id"] == id:
+            return True
+    return False
 
 #TODO: time now
 def timeNow():
