@@ -55,7 +55,7 @@ def login():
     try:
         body = request.json
         email, password = body['email'], body['password']
-        cred_test = run_query("select * from users")
+        cred_test = run_query("select * from Users")
 
         # TODO: Test user Password
         if len(password) < 8:
