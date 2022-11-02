@@ -1,9 +1,10 @@
 
-from email.policy import default
 from enum import unique
 from uuid import uuid4
 from flask import Flask
 import os
+import uuid
+from utils import run_query
 from image import image_bp
 from signup import signup_bp
 from utils import get_engine
@@ -75,6 +76,13 @@ def create_app():
         Column("image", String, nullable=False, unique=True),
         Column("title", String, nullable=False)
     )
+
+    Table(
+        "Category",
+        meta,
+        Column("category_id", String, primary_key= True),
+        Column("category_name", String, nullable=False, unique=True)
+    )
     meta.create_all(engine)
 
     return app
@@ -82,6 +90,12 @@ def create_app():
 
 
 app = create_app()
+
+#TODO: make user admin
+id = uuid.uuid4()
+run_query("insert into Users(id, name, email, phone_number,\
+    password, is_admin) values(\"{id}\", \"Darul\", \"gt20@gmail.com\",\
+        6285268487441, \"Qwerty123\", 1)", True)
 
 class IsString:
     def __eq__(self, other):

@@ -81,12 +81,12 @@ def login():
         for i in users:
             if i["email"] == email:
                 if i["password"] == password:
-                    token = jwt.encode({"email" : email, "password" : password},
+                    token = jwt.encode({"email" : email},
                     "inirahasiakita", 
                     algorithm="HS256")
                     # jwt.decode(token, "inirahasiakita", algorithms=["RS256"]
                     type = "buyer" if i["is_admin"] == 0  else "seller"
-                    run_query(f"update users set token={token} where email={email}", True)
+                    run_query(f"update Users set token=\"{token}\" where email=\'{email}\'", True)
                     return {"user_information" : {
                                 "name": i["name"],
                                 "email": email,
@@ -102,3 +102,4 @@ def login():
     #TODO if email or password not entered                
     except:
         return {"error" : "Email or password not entered"}, 400
+

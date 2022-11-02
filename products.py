@@ -14,8 +14,10 @@ product_name    name
 
 
 from flask import Blueprint, request
-from utils import run_query, validUser
+from utils import run_query, validUser, allowed_file
 import uuid
+from werkzeug.utils import secure_filename
+import os
 
 
 products_bp = Blueprint("products", __name__, url_prefix="/products")
@@ -36,32 +38,39 @@ def productDetailPage():
 # TODO: in admin page
 @products_bp.route("", methods=["POST"])
 def createProduct():
-    jwt_token = request.headers.get("jwt_token")
-    body = request.json
-    product_name = body["product_name"]
-    description = body["description"]
-    images = body["images"]
-    condition = body["condition"]
-    category = body["category_id"]
-    price = body["price"]
-    
-    if not validUser(jwt_token, True): return {"error" : "user not valid"}, 400
+    pass
+    # jwt_token = request.headers.get("jwt_token")
+    # body = request.json
+    # product_name = body["product_name"]
+    # description = body["description"]
+    # images = body["images"]
+    # condition = body["condition"]
+    # category = body["category_id"]
+    # price = body["price"]
+
+    # if not validUser(jwt_token, True): return {"error" : "user not valid"}, 400
 
     #FIXME: save image to folder image
     # save url directory with name image to list image
-    listImages =[] # ==> save to this for insert to database
-
+    # listImagess =[] # ==> save to this for insert to database
+    # for i in images:
+    #     if not allowed_file(i) return {"error" : "file extension must png or jpg"}, 400
+    #     listImages.append(i)
+    # for i in images:
+    # image_name = secure_filename(images.filename)
+    # images.save(os.path.join("image/", image_name))
+    # return {"message" : "hello"}, 200
 
     #TODO: make requirements
 
 
     #TODO: insert into database product_list
-    id = uuid.uuid4() # ==> id  product with uuid
-    run_query(f"insert into Product_list(id, category_id,\
-            product_name,condition, price, product_detail, image_url)\
-            values(\'{id}\', \'{category}\', \'{product_name}\', \'{condition}\',\
-            {price}, \'{description}\', {listImage})",True)
-    return {"message" : "Product added"},200
+    # id = uuid.uuid4() # ==> id  product with uuid
+    # run_query(f"insert into Product_list(id, category_id,\
+    #         product_name,condition, price, product_detail, image_url)\
+    #         values(\'{id}\', \'{category}\', \'{product_name}\', \'{condition}\',\
+    #         {price}, \'{description}\', {listImage})",True)
+    # return {"message" : "Product added"},200
 
 
 @products_bp.route("/{category_id}", methods=["PUT"])

@@ -2,15 +2,23 @@ from sqlalchemy import create_engine, text
 import re
 from datetime import datetime as dt
 
+
+#TODO: check image exension from body
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'png', 'jpg'}
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
 #TODO: time now
 def timeNow():
     return dt.now().strftime("%A, %d %B %Y")
 
 
 #TODO: valid users(True for seller, False for Buyer)
-def validUser(token, buyer: bool = False):
+def validUser(token, seller: bool = False):
     users = run_query("select * from Users")
-    cek = 1 if buyer else 0
+    cek = 1 if seller else 0
     for i in users:
         if token == i["token"] and i["is_admin"] == cek:
             return True
