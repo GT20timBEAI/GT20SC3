@@ -55,6 +55,14 @@ def inValid(email):
         return True
 
 
+def isCategoryIdExist(id):
+    CategoryId = run_query("select category_id from Category")
+    for i in CategoryId:
+        if i['category_id'] == id:
+            return True
+    return False
+
+
 def get_engine():
     """Creating SQLite Engine to interact"""
     return create_engine("sqlite:///finalproject.db", future=True)
