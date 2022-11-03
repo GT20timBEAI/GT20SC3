@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from utils import run_query
+from utils import run_query, validUser
 
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
@@ -24,10 +24,24 @@ def getUserShippingAddress():
 
 @user_bp.route("", methods=["GET"])
 def userDetail():
-    pass
+    try:
+        jwt_token = request.headers.get('Authentication')
+
+        if not validUser(jwt_token, True):
+            return {"error": "user not valid"}, 400
+
+        userDetail = run_query("select name, email, phone_number from Users")
+        data = {
+            "name": userDetail['name'],
+            "email": userDetail['email'],
+            "phone_number": userDetail['phone_number']
+        }, 200
+
+    except KeyError:
+        return {"message": "error, user already exist"}, 400
 
 
-@user_bp.route("/shipping_address", methods=["GET"])
+@user_bp.route("/shipping_address", methods=["POST"])
 def changeShippingAddress():
     pass
 
