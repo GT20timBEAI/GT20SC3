@@ -1,5 +1,5 @@
 
-from enum import unique
+
 from uuid import uuid4
 from flask import Flask
 import os
@@ -38,10 +38,10 @@ def create_app():
     # IMPLEMENT THIS
     # - setup SQLite database (if already exists, clear/reset the database)
     # - create necessary tables
-    db_name = "finalproject.db"
-    if os.path.isfile(db_name):
-        os.remove(db_name)
-    
+    # db_name = "finalproject.db"
+    # if os.path.isfile(db_name):
+    #     os.remove(db_name)
+    run_query("drop table \"Users\", \"Category\", \"Product_list\", \"Banner\"", True)
     # buat table dengan template ORM dibawah
     engine = get_engine()
     meta = MetaData()
@@ -94,10 +94,12 @@ def create_app():
 app = create_app()
 
 #TODO: make user admin
+run_query("select * from \"Users\"")
+
 id = uuid.uuid4()
-run_query("insert into Users(id, name, email, phone_number,\
-    password, is_admin) values(\"{id}\", \"Darul\", \"gt20@gmail.com\",\
-        6285268487441, \"Qwerty123\", 1)", True)
+run_query(f"insert into \"Users\" (id, name, email, phone_number,\
+    password,is_admin) VALUES (\'{id}\', \'Darul\', \'gt20@gmail.com\',\
+        6285268487441, \'Qwerty123\', 1)", True)
 
 class IsString:
     def __eq__(self, other):

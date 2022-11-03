@@ -1,7 +1,14 @@
 from sqlalchemy import create_engine, text
 import re
 from datetime import datetime as dt
+import os
 
+# TODO: check product id
+def checkProduct(id):
+    product_id = run_query("select id from \"Product_list\"")
+    for i in product_id:
+        if id == i["id"]: return True
+    return False
 
 #TODO: check image exension from body
 def allowed_file(filename):
@@ -11,7 +18,7 @@ def allowed_file(filename):
 
 #TODO: check category_id
 def checkIdCategory(id):
-    idCategory = run_query("select category_id from Category")
+    idCategory = run_query("select category_id from \"Category\"")
     for i in idCategory:
         if i["category_id"] == id:
             return True
@@ -24,7 +31,7 @@ def timeNow():
 
 #TODO: valid users(True for seller, False for Buyer)
 def validUser(token, seller: bool = False):
-    users = run_query("select * from Users")
+    users = run_query("select * from \"Users\"")
     cek = 1 if seller else 0
     for i in users:
         if token == i["token"] and i["is_admin"] == cek:
@@ -61,7 +68,15 @@ def inValid(email):
 
 def get_engine():
     """Creating SQLite Engine to interact"""
-    return create_engine("sqlite:///finalproject.db", future=True)
+    engine_uri = "postgresql+psycopg2://{}:{}@{}:{}/{}".format(
+        os.getenv("user"),
+        os.getenv("pass"),
+        os.getenv("host"),
+        os.getenv("port"),
+        os.getenv("db"),
+    )
+
+    return create_engine(engine_uri, future=True)
 
 
 def run_query(query, commit: bool = False):

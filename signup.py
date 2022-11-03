@@ -70,7 +70,7 @@ def signup():
     try:
         body = request.json
         name, email, phone, password = body["name"], body["email"], body["phone_number"], body["password"]
-        users = run_query("select email, phone_number from users")
+        users = run_query("select email, phone_number from \"Users\"")
         
         # TODO: Pasword requirements
         if len(password) < 8:
@@ -99,9 +99,10 @@ def signup():
             if phone == i["phone_number"]: return {"error": "phone number already exist"}, 409
 
 
-        #TODO Succesfull
+        #TODO: Succesfull
         id = uuid.uuid4()
-        run_query(f"insert into Users(id, name, email, phone_number, password, is_admin) values(\'{id}\',\'{name}\',\'{email}\',{phone},\'{password}\',0)", True)
+        run_query(f"insert into \"Users\"(id, name, email, phone_number, password, is_admin)\
+             values(\'{id}\',\'{name}\',\'{email}\',{phone},\'{password}\',0)", True)
         return {"message": "success, user created"}, 201
 
     except:

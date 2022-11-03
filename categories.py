@@ -8,7 +8,7 @@ categories_bp = Blueprint("categories", __name__, url_prefix="/categories")
 @categories_bp.route("", methods=["GET"])
 def getCategories():
     try:
-        get_category = run_query("select * from Category")
+        get_category = run_query("select * from \"Category\"")
         category_data = []
         for i in get_category:
             category_data.append(i)
@@ -28,8 +28,8 @@ def createCategories():
 
         #FIXME: category_id dont know
         id = uuid.uuid4()
-        run_query(f"insert into Category(category_id, category_name) \
-            values(\"{id}\", \"{category}\")", True)
+        run_query(f"insert into \"Category\"(category_id, category_name) \
+            values(\'{id}\', \'{category}\')", True)
         return {"message": "Category added"}, 200
     except KeyError:
         return {"message": "error, user already exist"}, 200
@@ -48,9 +48,9 @@ def updateCategories(urlPath):
     if not checkIdCategory(urlPath): return {"error" : "category id not found"}, 400
 
     #TODO: update category_id on table category
-    run_query(f"update Category set category_id=\"{category_idBody}\",\
-                category_name=\"{category_name}\" \
-                where category_id=\"{urlPath}\"", True)
+    run_query(f"update \"Category\" set category_id=\'{category_idBody}\',\
+                category_name=\'{category_name}\' \
+                where category_id=\'{urlPath}\'", True)
     return {"message": "Category updated"}, 200
     
 
@@ -64,7 +64,7 @@ def deleteCategories(category_id):
     if not checkIdCategory(category_id): 
         return {"error" : "category id not found"}, 400
     
-    run_query("delete from Category where category_id=\"{category_id}\"", True)
+    run_query("delete from \"Category\" where category_id=\'{category_id}\'", True)
     return {"message":"Category deleted"}, 200
 
         
