@@ -10,6 +10,33 @@ price           0,10000
 condition       used
 product_name    name
 
+[Product List]
+- URL: /products
+- method: GET
+
+Requirements (from the earliest to check):
+- if page is not a positive number:
+    - return {"error": "Please specify a positive amount"}
+    - status code: 400
+- if page_size is not a positive number:
+    - return {"error": "Please specify a positive amount"}
+    - status code: 400
+
+- if price is not integer:
+    - return {"error": "Please fill in with number"}
+    - status code: 400
+- if price is not a positive number:
+    - return {"error": "Please specify a positive amount"}
+    - status code: 400
+
+- If total_rows is not a positive number:
+    - return {"error": "Product Not Found/Available"}
+    - status code: 404
+
+- Else, everything is valid:
+    - return {"data": [{"id": "uuid", "image": "/something/image.png", "title": "Item A", "price": 15000}]}
+    - status code: 200
+
 [Create Product]
 - URL: /products
 - method: POST
@@ -30,7 +57,6 @@ Requirements (from the earliest to check):
 - Else, everything is valid:
     - return {"message": "Product added"}
     - status code: 201
-
 """
 
 

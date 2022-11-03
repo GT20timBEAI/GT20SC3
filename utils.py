@@ -23,6 +23,14 @@ def run_query(query, commit: bool = False):
         else:
             return [dict(row) for row in conn.execute(query)]
 
+def validUser(token, seller: bool = False):
+    users = run_query("select * from Users")
+    cek = 1 if seller else 0
+    for i in users:
+        if token == i['token'] and i['is_admin'] == cek:
+            return True
+    return False
+
 def check_email(email):
     regex = re.compile(r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
 
