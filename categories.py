@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from utils import run_query, validUser
+from utils import run_query, validUser, isCategoryIdExist
 import uuid
 
 
@@ -41,11 +41,34 @@ def createCategories():
         return {"message": "error, user already exist"}
 
 
-@categories_bp.route("/{category_id}", methods=["PUT"])
-def updateCategories():
-    pass
+@categories_bp.route("/<string:urlPath>", methods=["PUT"])
+def updateCategories(urlPath):
+    jwt_token = request.headers.get('Authentication')
+    body = request.json
+    category_id = body['category_id']
+    category_name = body['category_name']
+
+    if not validUser(jwt_token, True):
+        return {"error": "user not valid"}, 400
+
+    if not isCategoryIdExist(urlPath):
+        return {"error": "category not found"}, 400
+
+    run_query(f"update Category set category_id=\"{category_id}\", category_name=\"{category_name}\"\
+        where category_id = \"{urlPath}\"", True)
+
+    return {"message": "category added"}, 200
 
 
-@categories_bp.route("/{category_id}", methods=["DELETE"])
-def deleteCategories():
-    pass
+@categories_bp.route("/<string:urlPath>", methods=["DELETE"])
+def deleteCategories(urlPath):
+    jwt_token = request.headers.get('Authentication')
+    if not validUser(jwt_token, True):
+        return {"error": "user not valid"}, 400
+
+    if not isCategoryIdExist(urlPath):
+        return {"error": "category not found"}, 400
+
+    run_query(f"delete from Category where category_id = \"{urlPath}\"", True)
+
+    return {"message": "Category deleted"}, 200
