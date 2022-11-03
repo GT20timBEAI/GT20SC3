@@ -35,7 +35,8 @@ def userDetail():
             "name": userDetail['name'],
             "email": userDetail['email'],
             "phone_number": userDetail['phone_number']
-        }, 200
+        }
+        return data, 200
 
     except KeyError:
         return {"message": "error, user already exist"}, 400
@@ -48,9 +49,44 @@ def changeShippingAddress():
 
 @user_bp.route("/balance", methods=["POST"])
 def topupBalance():
-    pass
+    try:
+        jwt_token = request.headers.get('Authentication')
+        amount = request.args.get('amount')
+
+        if not validUser(jwt_token, True):
+            return {"error": "user not valid"}, 400
+
+        if amount <= 0:
+            return {"error": "Please specify a positive amount"}, 400
+
+        user = run_query(f"select id from Users where token = \"{jwt_token}\"")[
+            0]["id"]
+
+        run_query(
+            f"update Buyer_Shipping set balance = balance + {int(amount)} where user_id = \"{user}\"", True)
+
+        return {"message": "Top up balance success"}, 200
+
+    except KeyError:
+        return {"message": "error, user already exist"}, 400
 
 
 @user_bp.route("/balance", methods=["GET"])
 def getBalance():
-    pass
+    try:
+        jwt_token = request.headers.get('Authentication')
+        if not validUser(jwt_token, True):
+            return {"error": "user not valid"}, 400
+
+        user = run_query(f"select id from Users where id = \"{jwt_token}\"")[
+            0]['id']
+        balance = run_query(
+            f"select balance from Buyer_Shipping where user_id = \"{user}\"")
+
+        data = {
+            "balance": balance['balance']
+        }
+        return data, 200
+
+    except KeyError:
+        return {"message": "error, user already exist"}
