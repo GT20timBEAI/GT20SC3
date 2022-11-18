@@ -95,6 +95,7 @@ def create_app():
     Table(
         "Cart",
         meta,
+        Column("Cart_id", String, primary_key=True),
         Column("item_id", String, ForeignKey(
             "Product_List.id"), nullable=False),
         Column("user_id", String, ForeignKey("Users.id"), nullable=False),
