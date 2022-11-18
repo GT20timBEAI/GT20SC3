@@ -14,7 +14,7 @@ product_name    name
 
 
 from flask import Blueprint, request
-from utils import run_query, validUser
+from utils import run_query, validUser, symbol, checkProduct
 
 
 products_bp = Blueprint("products", __name__, url_prefix="/products")
@@ -74,10 +74,55 @@ def createProduct():
 
 @products_bp.route("/{category_id}", methods=["PUT"])
 def UpdateProducts():
-    pass
+    jwt_token = request.headers.get('Authentication')
+
+    if not validUser(jwt_token, True):
+        return {"error": "user not valid"}, 400
+
+    body = request.json
+    # req = [product_name, description, images,
+    #        condition, category, price, product_id]
+    # for i in req:
+    #     req[i] = body["\'i\'"]
+    product_name, description, images = body['product_name'], body['description'], body['image']
+    condition, category, price, product_id = body['condition'], body[
+        'category_id'], body['price'], body['product_id']
+
+    #####################################################
+    # Check if price is integer or not
+    # if symbol(str(req['price'])):
+    #     return {"error": "price must be number"}, 400
+    #####################################################
+
+    if symbol(str(price)):
+        return {"error": "price must be number"}, 400
+
+    #####################################################
+    # if not checkProduct(req['product_id']):
+    #     return {"error": "product not found"}, 400
+    #####################################################
+
+    if not checkProduct(product_id):
+        return {"error": "product not found"}, 400
+
+    #####################################################
+    # run_query(
+    #     f"update \'Product_list\' set product_name=\'{req['product_name']}\', \
+    #     description = \'{req['description']}\', condition = \'{req['condition']}\',\
+    #     category_id = \'{req['category']}\', price = \'{req['price']}\', image_url=\'{req['images']}\',\
+    #     where id = \'{req['product_id']}\', True")
+    #####################################################
+
+    run_query(f"update \"Product_list\" set product_name=\'{product_name}\',\
+            description=\'{description}\', condition=\'{condition}\',\
+            category_id = \'{category}\', price={price}, image_url=\'{images}\'\
+            where id=\'{product_id}\'", True)
+
+    return {"message": "Product added"}, 200
+
+    # delete products softs
 
 
-# delete products softs
 @products_bp.route("", methods=["DELETE"])
 def DeleteProducts():
     pass
