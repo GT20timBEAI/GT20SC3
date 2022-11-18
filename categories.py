@@ -31,7 +31,7 @@ def createCategories():
         run_query(f"insert into \"Category\"(category_id, category_name) \
             values(\'{id}\', \'{category}\')", True)
         return {"message": "Category added"}, 200
-    except KeyError:
+    except:
         return {"message": "error, user already exist"}, 200
 
 @categories_bp.route("/<string:urlPath>", methods=["PUT"])
@@ -64,7 +64,7 @@ def deleteCategories(category_id):
     if not checkIdCategory(category_id): 
         return {"error" : "category id not found"}, 400
     
-    run_query("delete from \"Category\" where category_id=\'{category_id}\'", True)
+    run_query(f"delete from \"Category\" where category_id=\'{category_id}\'", True)
     return {"message":"Category deleted"}, 200
 
         

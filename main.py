@@ -75,7 +75,7 @@ def create_app():
         Column("product_detail", String, nullable=True),
         Column("image_url", String, nullable=False)
     )
-    meta.create_all(engine)
+
 
     Table(
         "Banner",
