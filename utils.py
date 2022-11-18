@@ -3,6 +3,21 @@ import re
 from datetime import datetime as dt
 import os
 
+
+# get images from storage
+import os
+from google.cloud import storage
+
+def getStoregeImage(image):
+
+    storageconst = storage.Client()
+    bucket = storageconst.bucket("fashion-campuss")
+    blob = bucket.blob(image)
+    with blob.open("rb") as file:
+        images = file.read()
+    return images
+
+
 # TODO: check product id
 def checkProduct(id):
     product_id = run_query("select id from \"Product_list\"")

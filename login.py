@@ -54,7 +54,7 @@ from flask import Blueprint, request
 from utils import run_query, inValid
 import jwt
 
-login_bp = Blueprint("login", __name__, url_prefix="/signin")
+login_bp = Blueprint("login", __name__, url_prefix="/sign-in")
 
 
 # untuk request cek di scr

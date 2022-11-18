@@ -41,7 +41,9 @@ def create_app():
     # db_name = "finalproject.db"
     # if os.path.isfile(db_name):
     #     os.remove(db_name)
-    run_query("drop table \"Users\", \"Category\", \"Product_list\", \"Banner\"", True)
+    run_query("""
+        drop table "Users", "Category", "Product_list", "Banner"
+        """, True)
     # buat table dengan template ORM dibawah
     engine = get_engine()
     meta = MetaData()
