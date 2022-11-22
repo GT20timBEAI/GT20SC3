@@ -55,6 +55,14 @@ def inValid(email):
         return True
 
 
+def isCartIdExist(id):
+    CartId = run_query("SELECT Cart_id from Cart")
+    for i in CartId:
+        if i['Cart_id'] == id:
+            return True
+    return False
+
+
 def isCategoryIdExist(id):
     CategoryId = run_query("select category_id from Category")
     for i in CategoryId:
