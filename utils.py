@@ -141,6 +141,23 @@ def base64_split(base64_str):
         return base64_list[1]
     else:
         return base64_str
+
+
+def uploadStorage(path):
+    project_id = 'universal-sun-364614' 
+    bucket_name = 'fashion-campuss' 
+    bucket_file = f'{path}' 
+    local_file = f'{path}'
+
+    # Initialise a client
+    client = storage.Client(project_id)
+    # Create a bucket object for our bucket
+    bucket = client.get_bucket(bucket_name)
+    # Create a blob object from the filepath
+    blob = bucket.blob(bucket_file)
+    # Upload the file to a destination
+    blob.upload_from_filename(local_file)
+        
 # def name_symbol(name):
 #     regex = re.compile("[a-zA-Z0-9 ]")
 #     if re.fullmatch(regex, name):
