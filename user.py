@@ -14,7 +14,7 @@ def getUserShippingAddress():
         if not validUser(jwt_token, True):
             return {"error": "user not valid"}, 400
             
-        user_shipping = run_query("""
+        user_shipping = run_query(f"""
         SELECT u.id, u.name, u.phone_number u.token, by.address, by.city
         FROM Users u
         INNER JOIN Buyer_Shipping by
@@ -44,16 +44,16 @@ def userDetail():
         if not validUser(jwt_token, True):
             return {"error": "user not valid"}, 400
 
-        userDetail = run_query("""
-        SELECT name, email, phone_number, token
+        userDetail = run_query(f"""
+        SELECT name, email, phone_number
         FROM Users
         WHERE token = \'{jwt_token}\'
         """)[0]
         
         user_Data = {
-            "name": userDetail['name'],
-            "email": userDetail['email'],
-            "phone_number": userDetail['phone_number']
+            "name": userDetail[0]['name'],
+            "email": userDetail[0]['email'],
+            "phone_number": userDetail[0]['phone_number']
         }
 
         return {"data": user_Data}, 200
