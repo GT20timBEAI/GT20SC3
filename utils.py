@@ -181,6 +181,13 @@ def getStorageImage(image):
         images = file.read()
     return images
 
+
+def checkProduct(id):
+    product_id = run_query("select id from \"Product_list\"")
+    for i in product_id:
+        if id == i["id"]: return True
+    return False
+
 # def name_symbol(name):
 #     regex = re.compile("[a-zA-Z0-9 ]")
 #     if re.fullmatch(regex, name):
