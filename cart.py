@@ -5,7 +5,7 @@ import json
 
 cart_bp = Blueprint("cart", __name__, url_prefix="/cart")
 
-
+# DONE With Frond END
 @cart_bp.route("", methods=["POST"])
 def addtoCart():
 
@@ -30,44 +30,57 @@ def addtoCart():
     """, True)
     return {"message": "Item added to cart"}, 200
 
-
+# Front end error
 @cart_bp.route("", methods=["GET"])
 def getUserCart():
-    try:
-        jwt_token = request.headers.get('Authentication')
-        # Check buyer
-        if not validUser(jwt_token):
-            return {"message": "user not valid"}, 400
+    jwt_token = request.headers.get('Authentication')
+    # Check buyer
+    if not validUser(jwt_token):
+        return {"message": "user not valid"}, 400
 
-        cart = run_query("""
-        select cart_id, quantity, size, item_id from "Cart"
+    user_id = run_query(f"""
+    SELECT id from "Users"
+    WHERE token = '{jwt_token}'
+    """)[0]['id']
+
+    cart = run_query(f"""
+    select cart_id, quantity, size, item_id from "Cart"
+    WHERE user_id = '{user_id}'
+    """)
+    data = []
+    for i in cart:
+        item_id = run_query(f"""
+        select product_name, price from "Product_list"
+        where id = '{i['item_id']}'
+        """)[0]
+        image = run_query(f"""
+        SELECT image_url from "Image"
+        WHERE product_id = '{i['item_id']}'
         """)
-        data = []
-        for i in cart:
-            item_id = run_query(f"""
-            select product_name, price, image_url from "Product_list"
-            where id = '{i['item_id']}'
-            """)[0]
-            dict = {}
-            detail_dict = {}
-            detail_dict['quantity'] = i['quantity']
-            detail_dict['size'] = i['size']
-            dict['id'] = i['cart_id']
-            dict['detail'] = detail_dict
-            dict['price'] = item_id['price']
-            dict['image'] = item_id['image_url']
-            dict['name'] = item_id['product_name']
-            data.append(dict)
-        return {"data" : data}, 200
-    except:
-        return {"Error": "Not found cart data"}, 400
+        if len(image) > 0:
+            image = image[0]['image_url']
+        else:
+            image = '/image/dummy.jpg'
+        dict = {}
+        detail_dict = {}
+        detail_dict['quantity'] = i['quantity']
+        detail_dict['size'] = i['size']
+        dict['id'] = i['cart_id']
+        dict['detail'] = detail_dict
+        dict['price'] = item_id['price']
+        dict['image'] = image
+        dict['name'] = item_id['product_name']
+        data.append(dict)
+    return {"data" : data}, 200
 
 
 
+# Review with Frond END
 @cart_bp.route("/<string:cartId>", methods=["DELETE"])
 def deleteCartItem(cartId):
 
     jwt_token = request.headers.get('Authentication')
+
     if not validUser(jwt_token):
         return {"message": "user not valid"}, 400
 

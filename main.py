@@ -87,14 +87,6 @@ def create_app():
 
 
     Table(
-        "Banner",
-        meta,
-        Column("id", String, primary_key= True),
-        Column("image", String, nullable=False, unique=True),
-        Column("title", String, nullable=False)
-    )
-
-    Table(
         "Orders",
         meta,
         Column("order_id", String, primary_key=True),

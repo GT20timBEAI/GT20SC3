@@ -32,10 +32,30 @@ home_bp = Blueprint("home", __name__, url_prefix="/home")
 
 @home_bp.route("/banner", methods=["GET"])
 def getBanner():
-    banner = run_query("select id, image, title from Banner")
+    banner = run_query("""
+    SELECT id, product_name FROM "Product_list"
+    """)
     list_banner = []
+    loop = 0
+    list_image = ['/image/banner/banner-1.jpg', '/image/banner/banner_2.jpg']
     for i in banner:
-        list_banner.append(i)
+        if loop <= 3 and len(banner) > loop:
+            dict = {}
+            image = run_query(f"""
+            SELECT image_url FROM "Image"
+            WHERE product_id = '{i['id']}'
+            """)
+            if len(image) == 0:
+                image = '/image/banner/banner-1.jpg'
+            else:
+                image = image[0]['image_url']
+            # image = list_image[loop]
+            dict['id'] = i['id']
+            dict['image'] = image
+            dict['title'] = i['product_name']
+            list_banner.append(dict)
+            loop += 1
+
     return {"data": list_banner}
 
 @home_bp.route("/category", methods=["GET"])

@@ -86,7 +86,6 @@ def changeShippingAddress():
     # ceck phone number
     if symbol(phone): 
         return {"message": "phone just containt number"},400
-    print(phone)
 
     run_query(f"""
     Insert into "Buyer_Shipping" (user_id, address, city, name, phone_number)
