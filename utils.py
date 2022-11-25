@@ -172,6 +172,14 @@ def deleteStorage(fileName):
     blob = bucket.blob(fileName)
     blob.delete()
 
+def getStorageImage(image):
+
+    storageconst = storage.Client()
+    bucket = storageconst.bucket("fashion-campuss")
+    blob = bucket.blob(image)
+    with blob.open("rb") as file:
+        images = file.read()
+    return images
 
 # def name_symbol(name):
 #     regex = re.compile("[a-zA-Z0-9 ]")
