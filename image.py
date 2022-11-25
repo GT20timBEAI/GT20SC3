@@ -1,6 +1,6 @@
 from flask import Blueprint, send_file
 import io
-from utils import serveImage, extensionImage, getStoregeImage
+from utils import serveImage, extensionImage, getStorageImage
 
 image_bp = Blueprint("image", __name__, url_prefix="/image/<path:urlPath>")
 
@@ -17,7 +17,7 @@ def getImage(urlPath):
         extension = extensionImage(urlPath)
         if not extensionImage(urlPath):return {"message" : "error, Image not Found"},400
         # conten = serveImage(urlPath)
-        conten = getStoregeImage(urlPath)
+        conten = getStorageImage(urlPath)
         return send_file(io.BytesIO(conten), mimetype=f"{extension}")
     except:
         return {"message" : "error, Image not Found"},400

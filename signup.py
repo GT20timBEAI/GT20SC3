@@ -64,7 +64,7 @@ import uuid
 
 signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
 
-# untuk request cek di scr
+# DONE with front end
 @signup_bp.route("", methods=["POST"])
 def signup():
     try:
@@ -74,35 +74,34 @@ def signup():
         
         # TODO: Pasword requirements
         if len(password) < 8:
-            return {"error": "Password must contain at least 8 characters"},400
+            return {"message": "Password must contain at least 8 characters"},400
         elif any(i.islower() for i in password) == False:
-            return {"error": "Password must contain a lowercase letter"}, 400
+            return {"message": "Password must contain a lowercase letter"}, 400
         elif any(i.isupper() for i in password) == False:
-            return {"error": "Password must contain an uppercase letter"}, 400
+            return {"message": "Password must contain an uppercase letter"}, 400
         elif any(c.isdigit() for c in password) == False:
-            return {"error": "Password must contain a number"},400
+            return {"message": "Password must contain a number"},400
 
         # TODO: name requirements  
-        elif len(name) < 5: return {"error": "name must contain at least 5 character"},400
-        elif any(c.isdigit() for c in name) == True: return {"error": "name just alphabet"},400
+        elif len(name) < 5: return {"message": "name must contain at least 5 character"},400
+        elif any(c.isdigit() for c in name) == True: return {"message": "name just alphabet"},400
 
         # TODO: email requirements
-        elif inValid(email): return {"error": "your email is wrong"}, 400
+        elif inValid(email): return {"message": "your email is wrong"}, 400
 
         #TODO: phone number requirements
-        elif symbol(phone): return {"error": "phone just containt number"},400
-        elif len(phone) < 12: return {"error": "phone must contain less than 12 character"},400
+        elif symbol(phone): return {"message": "phone just containt number"},400
+        elif len(phone) < 12: return {"message": "phone must contain less than 12 character"},400
 
         #TODO: email and phone exist in database
         for i in users:
-            if email == i["email"]:return {"error": "email already exist"}, 409
-            if phone == i["phone_number"]: return {"error": "phone number already exist"}, 409
-
+            if email == i["email"]:return {"message": "email already exist"}, 409
+            if phone == i["phone_number"]: return {"message": "phone number already exist"}, 409
 
         #TODO: Succesfull
         id = uuid.uuid4()
-        run_query(f"insert into \"Users\"(id, name, email, phone_number, password, is_admin)\
-             values(\'{id}\',\'{name}\',\'{email}\',{phone},\'{password}\',0)", True)
+        run_query(f"insert into \"Users\"(id, name, email, phone_number, password, is_admin, balance)\
+             values(\'{id}\',\'{name}\',\'{email}\',{phone},\'{password}\', 0 , 0)", True)
         return {"message": "success, user created"}, 201
 
     except:
