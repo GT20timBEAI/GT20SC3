@@ -1,32 +1,34 @@
 from flask import Blueprint, request
 from utils import run_query, validUser
 import uuid
+import json
 
 cart_bp = Blueprint("cart", __name__, url_prefix="/cart")
 
 
 @cart_bp.route("", methods=["POST"])
 def addtoCart():
-    try:
-        jwt_token = request.headers.get('Authentication')
-        body = request.form
-        id, quantity, size = body['id'], body['quantity'], body['size']
-        
-        if not validUser(jwt_token):
-            return {"message": "user not valid"}, 400
 
-        cart_id = uuid.uuid4()
-        user_id = run_query(f"""
-        select id from "Users" where token='{jwt_token}'
-        """)[0]['id']
-        run_query(f"""
-        Insert into "Cart" (cart_id, item_id, user_id, quantity, size )
-        VALUES ('{cart_id}','{id}','{user_id}',{quantity},'{size}' )
-        """, True)
-        return {"message": "Item added to cart"}, 200
+    jwt_token = request.headers.get('Authentication')
 
-    except:
-        return {"message": "user already exist"}
+    if not validUser(jwt_token):
+        return {"message": "user not valid"}, 400
+
+    body = request.get_data()
+    body = body.decode('utf-8')
+    body = json.loads(body)
+    id, quantity, size = body['id'], body['quantity'], body['size']
+    
+
+    cart_id = uuid.uuid4()
+    user_id = run_query(f"""
+    select id from "Users" where token = '{jwt_token}'
+    """)[0]['id']
+    run_query(f"""
+    Insert into "Cart" (cart_id, item_id, user_id, quantity, size )
+    VALUES ('{cart_id}','{id}','{user_id}',{quantity},'{size}' )
+    """, True)
+    return {"message": "Item added to cart"}, 200
 
 
 @cart_bp.route("", methods=["GET"])

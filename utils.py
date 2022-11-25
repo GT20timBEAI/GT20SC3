@@ -19,8 +19,7 @@ def ProductListGet(data):
         if len(image) == 0:
             image = []
         else:
-            image[0]['image_url']
-        
+            image = image[0]['image_url']
         data_dict['id'] = i['id']
         data_dict['title'] = i['product_name']
         data_dict['price'] = i['price']
