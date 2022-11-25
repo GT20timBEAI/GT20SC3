@@ -14,16 +14,23 @@ def getUserShippingAddress():
         if not validUser(jwt_token, True):
             return {"error": "user not valid"}, 400
             
-        user_sp = run_query("select id, name, phone_number, address, city from From Users \
-            inner join Buyer_Shipping using(user_id)")
-        data = {
-            "id": user_sp['id'],
-            "name": user_sp['name'],
-            "phone_number": user_sp['phone_number'],
-            "address": user_sp['address'],
-            "city": user_sp['city']
+        user_shipping = run_query("""
+        SELECT u.id, u.name, u.phone_number u.token, by.address, by.city
+        FROM Users u
+        WHERE u.token = \'{jwt_token}\'
+        INNER JOIN Buyer_Shipping by
+        ON by.user_id = u.id
+        """)[0]
+
+        shipping_data = {
+            "id": user_shipping['u.id'],
+            "name": user_shipping['u.name'],
+            "phone_number": user_shipping['u.phone_number'],
+            "address": user_shipping['by.address'],
+            "city": user_shipping['by.city']
         }
-        return data, 200
+
+        return {"data": shipping_data}, 200
 
     except KeyError:
         return {"message": "error, user already exist"}
@@ -37,13 +44,16 @@ def userDetail():
         if not validUser(jwt_token, True):
             return {"error": "user not valid"}, 400
 
-        userDetail = run_query("select name, email, phone_number from Users")
-        data = {
-            "name": userDetail['name'],
-            "email": userDetail['email'],
-            "phone_number": userDetail['phone_number']
-        }
-        return data, 200
+        userDetail = run_query("""
+        SELECT name, email, phone_number, token
+        FROM Users
+        WHERE token = \'{jwt_token}\'
+        """)
+        
+        for i in userDetail:
+            return {
+
+            }
 
     except KeyError:
         return {"message": "error, user already exist"}, 400
