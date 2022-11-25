@@ -78,6 +78,53 @@ def ProductListSorted(category_id, sort_by, price, condition, product_name):
     """)
 
     return data
+
+def countProductList(category_id, sort_by, price, condition, product_name):
+
+    # split category
+    if category_id == '0':
+        category = ''
+    else:
+        category_id = category_id.split(",")
+        category = ''
+        for i in category_id:
+            category = f"{category}category_id like '{i}%' OR "
+
+    # Initial sorted
+    sorted = 'GROUP BY product_name' if sort_by == 'Price a_z' else 'GROUP BY product_name DESC'
+    if sorted == '0':
+        sorted = ''
+
+    # initial price
+    if price == '0':
+        price = ''
+    else:
+        price = price.split(',')
+        min = price[0]
+        max = price[1]
+        price = f"Price BETWEEN {min} AND {max},"
+    
+    # initial condition
+    if condition == '0':
+        condition = ''
+    else:
+        condition = f"\'{condition}\',"
+    
+    # inital product name
+    if product_name == '0':
+        product_name = ''
+    else:
+        product_name = f"product_name like '%{product_name}%',"
+
+
+    data = run_query(f"""
+    SELECT count(id)
+    FROM "Product_list"
+    WHERE {category}  {price} {condition} {product_name} status = 1
+    """)
+
+    return data
+
 # def name_symbol(name):
 #     regex = re.compile("[a-zA-Z0-9 ]")
 #     if re.fullmatch(regex, name):
