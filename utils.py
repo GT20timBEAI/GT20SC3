@@ -125,6 +125,22 @@ def countProductList(category_id, sort_by, price, condition, product_name):
 
     return data
 
+
+def checkCategoryName(category):
+    name = run_query("""
+    SELECT category_name from "Category"
+    """)
+    for i in name:
+        if category == i['category_name']: 
+            return True
+    return False
+
+def base64_split(base64_str):
+    if ',' in base64_str:
+        base64_list = base64_str.split(',')
+        return base64_list[1]
+    else:
+        return base64_str
 # def name_symbol(name):
 #     regex = re.compile("[a-zA-Z0-9 ]")
 #     if re.fullmatch(regex, name):
