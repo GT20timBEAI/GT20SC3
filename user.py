@@ -17,9 +17,9 @@ def getUserShippingAddress():
         user_shipping = run_query("""
         SELECT u.id, u.name, u.phone_number u.token, by.address, by.city
         FROM Users u
-        WHERE u.token = \'{jwt_token}\'
         INNER JOIN Buyer_Shipping by
         ON by.user_id = u.id
+        WHERE u.token = \'{jwt_token}\'
         """)[0]
 
         shipping_Data = {
@@ -72,13 +72,32 @@ def changeShippingAddress():
         if not validUser(jwt_token, True):
             return {"error": "user not valid"}, 400
         
-        run_query(f'UPDATE Users set name=\'{name}\', phone_number=\'{phone_number}\'', True)
-        run_query(f'UPDATE Buyer_Shipping set address=\'{address}\', city=\'{city}\'', True)
+        run_query(f'UPDATE Users set name=\'{name}\', phone_number=\'{phone_number}\' WHERE token = \'{jwt_token}\' ', True)
 
-        shipping_addresss = run_query('SELECT u.name, u.phone number, b.address, b.city \
+        userID = run_query(f"""
+        SELECT us.user_id, u.id, u.token FROM Buyer_Shipping
+        INNER JOIN Users u
+        ON u.id = us.user_id
+        WHERE u.token = \'{jwt_token}\'
+        """)[0]
+
+        for i in userID:
+            run_query(f'UPDATE Buyer_Shipping set address=\'{address}\', city=\'{city}\' WHERE user_id = \'{i['us.user_id']}\'', True)
+
+        ##################################################
+        # # userId = run_query(f"""
+        # # SELECT id FROM Users
+        # # WHERE token = \'{jwt_token}\''
+        # # """)[0]
+
+        # run_query(f'UPDATE Buyer_Shipping set address=\'{address}\', city=\'{city}\' WHERE user_id = \'{userId}\'', True)
+        ##################################################
+
+        shipping_addresss = run_query(f'SELECT u.name, u.phone number, u.token, b.address, b.city \
         FROM Users u\
         INNER JOIN Buyer_Shipping b\
-        ON b.user_id = u.\'"id"\';')
+        ON b.user_id = u.id\
+        WHERE u.token = \'{jwt_token}\'')[0]
 
         data = {
             "name": shipping_addresss['name'],
