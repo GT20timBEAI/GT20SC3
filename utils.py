@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, text
 import re
 from datetime import datetime as dt
+import base64
 
 
 def symbol(string):
@@ -9,7 +10,27 @@ def symbol(string):
         if i in symbol:
             return True
 
-
+def ProductListGet(data):
+    dataList = []
+    for i in data:
+        data_dict = {}
+        image = run_query(f"""
+        select image_url from "Image"
+        WHERE product_id = '{i['id']}'
+        limit 1
+        """)
+        if len(image) == 0:
+            image = []
+        else:
+            image[0]['image_url']
+        
+        data_dict['id'] = i['id']
+        data_dict['title'] = i['product_name']
+        data_dict['price'] = i['price']
+        data_dict['image'] = image
+        dataList.append(data_dict)
+    
+    return dataList
 # def name_symbol(name):
 #     regex = re.compile("[a-zA-Z0-9 ]")
 #     if re.fullmatch(regex, name):
