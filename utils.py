@@ -38,8 +38,13 @@ def ProductListSorted(category_id, sort_by, price, condition, product_name):
     else:
         category_id = category_id.split(",")
         category = ''
-        for i in category_id:
-            category = f"{category}category_id like \'{i}%\' OR "
+        for i in range(len(category_id)):
+            print(i)
+            category = f"{category}category_id = \'{category_id[i]}\'"
+            if i == len(category_id) - 1:
+                category = f"{category} AND "
+            else:
+                category = f"{category} OR "
 
     # Initial sorted
     sorted = 'ORDER BY product_name ASC' if sort_by == 'Price a_z' else 'ORDER BY product_name DESC'
@@ -53,24 +58,30 @@ def ProductListSorted(category_id, sort_by, price, condition, product_name):
         price = price.split(',')
         min = price[0]
         max = price[1]
-        price = f"Price BETWEEN {min} AND {max},"
+        price = f"AND Price BETWEEN {min} AND {max}  "
     
     # initial condition
     if condition == '0':
         condition = ''
     else:
-        condition = f"\'{condition}\',"
+        condition = f"condition = \'{condition}\' AND "
     
     # inital product name
     if product_name == '0':
         product_name = ''
     else:
-        product_name = f"product_name like '%{product_name}%',"
+        product_name = f"product_name like '%{product_name}%', "
 
     data = run_query(f"""
     SELECT id, product_name, price
     FROM "Product_list"
-    WHERE {category}  {price} {condition} {product_name} status = 1
+    WHERE {category}{condition}{product_name} status = 1{price}
+    {sorted}
+    """)
+    print(f"""
+    SELECT id, product_name, price
+    FROM "Product_list"
+    WHERE {category}{condition}{product_name}status = 1{price}
     {sorted}
     """)
 

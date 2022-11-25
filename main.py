@@ -46,9 +46,9 @@ def create_app():
     # if os.path.isfile(db_name):
     #     os.remove(db_name)
     # Delete this raw query if development
-    run_query("""
-        drop table "Users", "Category", "Product_list", "Banner", "Cart", "Orders", "Buyer_Shipping", "Image"
-        """, True)
+    # run_query("""
+    #     drop table "Users", "Category", "Product_list", "Banner", "Cart", "Orders", "Buyer_Shipping", "Image"
+    #     """, True)
     # buat table dengan template ORM dibawah
     engine = get_engine()
     meta = MetaData()
@@ -145,9 +145,9 @@ app = create_app()
 run_query("select * from \"Users\"")
 
 id = uuid.uuid4()
-run_query(f"insert into \"Users\" (id, name, email, phone_number,\
-    password,is_admin, balance) VALUES (\'{id}\', \'Darul\', \'gt20@gmail.com\',\
-        6285268487441, \'Qwerty123\', 1, '0')", True)
+# run_query(f"insert into \"Users\" (id, name, email, phone_number,\
+#     password,is_admin, balance) VALUES (\'{id}\', \'Darul\', \'gt20@gmail.com\',\
+#         6285268487441, \'Qwerty123\', 1, '0')", True)
 
 class IsString:
     def __eq__(self, other):

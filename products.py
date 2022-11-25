@@ -53,7 +53,6 @@ def productlist():
 
     else:
         params = request.args
-        count_params = 0
         page = params['page']
         page_size = params['page_size']
 
@@ -65,11 +64,11 @@ def productlist():
             category = params['category']
         else:
             category = '0'
-        if 'price' in params:
-            price = params['price']
+        if 'harga' in params:
+            price = params['harga']
         else:
             price = '0'
-        if 'condition' in params:
+        if 'kondisi' in params:
             condition = params['kondisi']
         else:
             condition = '0'
@@ -80,10 +79,10 @@ def productlist():
         
         # GET data 
         data = ProductListSorted(category, sort_by, price, condition, product_name)
-        print(data)
+
         # count product 
         count = len(data)
-
+        print(data)
         dataList = []
         for i in range(int(page_size) * (int(page)-1), int(page_size) * int(page)):
             if count <= i:
@@ -240,10 +239,7 @@ def UpdateProducts():
     body = request.get_data()
     body = body.decode('utf-8')
     body = json.loads(body)
-    if 'image' in body:
-        image = body['images']
-    else:
-        image = '0'
+    image = body['images']
     jwt_token = request.headers.get("Authentication")
     product_name = body["product_name"]
     if 'description' not in body:
@@ -269,11 +265,16 @@ def UpdateProducts():
     WHERE product_id like '{product_id}'
     """)
 
-    if 'image_url' in imageBefore[0] and image == '0':
+
+    list = []
+    no = 1
+    #upload to google storage
+    if image[0].split('/')[0] == 'data:image':
+        if 'image_url' in imageBefore[0]:
         #Delete image_url from Google Storage
-        for i in range(len(imageBefore)):
-            great = imageBefore[i]['image_url'].split('/')[2]
-            deleteStorage(great)
+            for i in imageBefore:
+                great = i['image_url'].split('/')[2]
+                deleteStorage(great)
 
         #Delete image_url on database
         run_query(f"""
@@ -281,10 +282,7 @@ def UpdateProducts():
         """, True)
 
 
-    list = []
-    no = 1
-    #upload to google storage
-    if image != '0':
+
         for i in image:
             i = base64_split(i)
 
@@ -303,12 +301,12 @@ def UpdateProducts():
             #delete file
             os.remove(f'{product_name}{no}.png')
             no += 1
-    
         for i in list:
             run_query(f"""
             INSERT into "Image" (product_id, image_url)
-            VALUES('{id}' , '/image/{i}' )
+            VALUES('{product_id}' , '/image/{i}' )
             """, True)
+            
     run_query(f"""
     UPDATE "Product_list"
     SET product_name = '{product_name}', category_id = '{category}',
@@ -347,6 +345,7 @@ def DeleteProducts(urlpath):
     # """, True)
 
     # Delete product on database
+    print(urlpath)
     run_query(f"""
     UPDATE "Product_list" 
     SET status = 0
