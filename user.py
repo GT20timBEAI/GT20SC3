@@ -22,7 +22,7 @@ def getUserShippingAddress():
         ON by.user_id = u.id
         """)[0]
 
-        shipping_data = {
+        shipping_Data = {
             "id": user_shipping['u.id'],
             "name": user_shipping['u.name'],
             "phone_number": user_shipping['u.phone_number'],
@@ -48,12 +48,15 @@ def userDetail():
         SELECT name, email, phone_number, token
         FROM Users
         WHERE token = \'{jwt_token}\'
-        """)
+        """)[0]
         
-        for i in userDetail:
-            return {
+        user_Data = {
+            "name": userDetail['name'],
+            "email": userDetail['email'],
+            "phone_number": userDetail['phone_number']
+        }
 
-            }
+        return {"data": user_Data}, 200
 
     except KeyError:
         return {"message": "error, user already exist"}, 400
