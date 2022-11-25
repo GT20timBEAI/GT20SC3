@@ -164,6 +164,15 @@ def uploadFile(image, name):
     bucket = storageconst.bucket("fashion-campuss")
     blob = bucket.blob(f"{name}.png")
     blob.upload_from_file(image, content_type="image/png")
+
+
+def deleteStorage(fileName):
+    storageconst = storage.Client()
+    bucket = storageconst.bucket("fashion-campuss")
+    blob = bucket.blob(fileName)
+    blob.delete()
+
+
 # def name_symbol(name):
 #     regex = re.compile("[a-zA-Z0-9 ]")
 #     if re.fullmatch(regex, name):
