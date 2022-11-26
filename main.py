@@ -1,11 +1,17 @@
+
+
+from uuid import uuid4
 from flask import Flask
 import os
+import uuid
+import datetime
+from utils import run_query, timeNow
 from image import image_bp
 from signup import signup_bp
 from utils import get_engine
 from products import products_bp
 from home import home_bp
-from login import login_bp, testToken
+from login import login_bp
 from categories import categories_bp
 from cart import cart_bp
 from shipping import shipping_bp
@@ -17,38 +23,110 @@ from sqlalchemy import (
     String, 
     create_engine,
     Integer,
+    ForeignKey,
+    DateTime,
+    BigInteger
     )
+from flask_cors import CORS
+
+cors = CORS()
 
 
 
 def create_app():
     app = Flask(__name__)
-
+    cors.init_app(app)
     # always register your blueprint(s) when creating application
     blueprints = [signup_bp, login_bp, products_bp, home_bp, categories_bp, cart_bp, shipping_bp, user_bp, image_bp]
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
-
+    
     # IMPLEMENT THIS
     # - setup SQLite database (if already exists, clear/reset the database)
     # - create necessary tables
-    db_name = "finalproject.db"
-    if os.path.isfile(db_name):
-        os.remove(db_name)
-    
+    # db_name = "finalproject.db"
+    # if os.path.isfile(db_name):
+    #     os.remove(db_name)
+    # Delete this raw query if development
+    # run_query("""
+    #     drop table "Users", "Category", "Product_list", "Banner", "Cart", "Orders", "Buyer_Shipping", "Image"
+    #     """, True)
     # buat table dengan template ORM dibawah
     engine = get_engine()
     meta = MetaData()
     Table(
-        "users",
+        "Users",
         meta,
-        Column("id", Integer, primary_key= True),
+        Column("id", String, primary_key= True),
         Column("name", String, nullable=False),
         Column("email", String, nullable=False, unique= True),
         Column("phone_number", String, nullable=False, unique=True),
         Column("password", String, nullable=False),
-        Column("is_admin", Integer, nullable=True, default=0)
+        Column("is_admin", Integer, nullable=True),
+        Column("token", String, nullable=True),
+        Column("balance", Integer, nullable=True)
     )
+
+    Table(
+        "Category",
+        meta,
+        Column("category_id", String, primary_key= True),
+        Column("category_name", String, nullable=False, unique=True)
+        
+    )
+
+    Table(
+        "Product_list",
+        meta,
+        Column("id", String, primary_key= True),
+        Column("category_id", String, ForeignKey("Category.category_id")),
+        Column("product_name", String, nullable=False, unique= True),
+        Column("condition", String, nullable=False),
+        Column("price", Integer, nullable=False),
+        Column("product_detail", String, nullable=True),
+        Column("status", Integer, nullable=False)
+    )
+
+
+    Table(
+        "Orders",
+        meta,
+        Column("order_id", String, primary_key=True),
+        Column("created_at", DateTime, default=timeNow())
+    )
+
+    Table(
+        "Cart",
+        meta,
+        Column("cart_id", String, primary_key=True),
+        Column("item_id", String, ForeignKey(
+            "Product_list.id"), nullable=False),
+        Column("user_id", String, ForeignKey("Users.id"), nullable=False),
+        Column("order_id", String, ForeignKey(
+            "Orders.order_id"), nullable=True),
+        Column("quantity", Integer, nullable=False),
+        Column("size", String, nullable=False),
+        Column("status", String, nullable=True),
+        Column("shipping_method", String, nullable=True)
+    )
+
+    Table(
+        "Buyer_Shipping",
+        meta,
+        Column("user_id", String, ForeignKey("Users.id"), nullable=False),
+        Column("address", String, nullable=False),
+        Column("city", String, nullable=False),
+        Column("name", String, nullable=False),
+        Column("phone_number", BigInteger, nullable=False)
+    )
+
+    Table(
+        "Image",
+        meta,
+        Column("product_id", String, ForeignKey("Product_list.id"), nullable=False),
+        Column("image_url", String, nullable=False)
+    )
+
     meta.create_all(engine)
 
     return app
@@ -56,6 +134,14 @@ def create_app():
 
 
 app = create_app()
+
+#TODO: make user admin
+run_query("select * from \"Users\"")
+
+id = uuid.uuid4()
+# run_query(f"insert into \"Users\" (id, name, email, phone_number,\
+#     password,is_admin, balance) VALUES (\'{id}\', \'Darul\', \'gt20@gmail.com\',\
+#         6285268487441, \'Qwerty123\', 1, '0')", True)
 
 class IsString:
     def __eq__(self, other):
@@ -341,7 +427,7 @@ if __name__ == "__main__":
     num=1
     # password is less than 8 characters
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail.com", "password" : "ABC"},
     )
     assert_eq(
@@ -356,7 +442,7 @@ if __name__ == "__main__":
     
     # password doesn't contain any lowercase letters 
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail.com", "password" : "ABC123456"},
     )
     assert_eq(
@@ -371,7 +457,7 @@ if __name__ == "__main__":
     
     # password doesn't contain any lowercase letters
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail.com", "password" : "abc123456"},
     )
     assert_eq(
@@ -386,7 +472,7 @@ if __name__ == "__main__":
     
     # password doesn't contain any lowercase letters
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail.com", "password" : "abcABCDE"},
     )
     assert_eq(
@@ -401,7 +487,7 @@ if __name__ == "__main__":
     
     # testing email
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto", "password" : "Ab123456"},
     )
     assert_eq(
@@ -416,7 +502,7 @@ if __name__ == "__main__":
     
     # testing email
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@", "password" : "Ab123456"},
     )
     assert_eq(
@@ -431,7 +517,7 @@ if __name__ == "__main__":
     
     # testing email
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail", "password" : "Ab123456"},
     )
     assert_eq(
@@ -446,7 +532,7 @@ if __name__ == "__main__":
     
     # email not registered
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto7@gmail.com", "password" : "Ab123456"},
     )
     assert_eq(
@@ -461,7 +547,7 @@ if __name__ == "__main__":
     
     # password wrong
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"email" : "darulcrypto@gmail.com", "password" : "Abc123456"},
     )
     assert_eq(
@@ -476,7 +562,7 @@ if __name__ == "__main__":
 
     # not entered email or password
     register_user_response = c.post(
-        "/login",
+        "/signin",
         json={"password" : "Ab123456"},
     )
     assert_eq(
@@ -489,22 +575,25 @@ if __name__ == "__main__":
     print("==================================================")
     num+=1
 
-    # succesful login
-    register_user_response = c.post(
-        "/login",
-        json={"email" : "darulcrypto@gmail.com", "password" : "Ab123456"},
-    )
-    assert_eq(
-        register_user_response.json,
-        {"user_information" : {"name": "darul",
-        "email": "darulcrypto@gmail.com",
-        "phone_number": "6285268487440",
-        "type:" : "buyer"},
-        "message": "Login succes","token" :  IsString()
-        }
-    )
-    assert_eq(register_user_response.status_code, 200)
-    print("==================================================")
-    print(f"           [Task {num}] succesful login                      ")
-    print("==================================================")
-    num+=1
+    # # succesful login
+    # register_user_response = c.post(
+    #     "/login",
+    #     json={"email" : "darulcrypto@gmail.com", "password" : "Ab123456"},
+    # )
+    # assert_eq(
+    #     register_user_response.json,
+    #     {"user_information" : {"name": "darul",
+    #     "email": "darulcrypto@gmail.com",
+    #     "phone_number": "6285268487440",
+    #     "type:" : "buyer"},
+    #     "message": "Login succes","token" :  IsString()
+    #     }
+    # )
+    # assert_eq(register_user_response.status_code, 200)
+    # print("==================================================")
+    # print(f"           [Task {num}] succesful login                      ")
+    # print("==================================================")
+    # num+=1
+
+    
+    

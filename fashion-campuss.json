@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "universal-sun-364614",
+  "private_key_id": "3e066836a3172d001e6f8cafa297f6653b155a00",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCO5jPT57f4kHYN\nNZTRylWj+GkC746QSn6qpw41skWMGKDDN+VA32W4TwqOeioVyGZmknJeGUbR+/su\npZGnAbs/2koDgbW3aHujItnE5DQc848b6ckuydFetItzqRvQD5bjI0dvEhWVBJiD\n+eNOjVS5a1M5fHcgP7hbxxbt1mE7B06PyV02HRvjO5TtzkNKiGfUrIvUiy/Onytn\nonlp6nf1H2dF0HAQ8ywciME005sIcmaQfnrAxNJpQJeknK7rbS95UrBWF+lye3JW\nhaGlgdon30hWMp5b12BzMXEgkl3hFo9hCQKD5ZYlI9bdRoJVTvKIbSQCkMSSA+LT\n795lBObtAgMBAAECggEAItvPGss02qLK2XAPrJmSCJzJaRjtCw/RFGoKElk5k/JS\nDS0udIPKeYp2hckRSR0Itc7VrVS3LPQuEvP6suW+OtZSJcbXgDUxq9sNinUsrT9Q\n0rtWA17h/xtFxWIkUb3rzd7GRzb/IsnrNo6Xv4rEdzLSK3zMRoakv2ayljQspcxG\nLUK0whHwV3vFpoBoVZBntGhq6mqkHRGf31kCFTSxLT7/DY4duegW9p2VBZrLWy0h\nzXs2SsGAjradPhBvriMIxbmSsslBqtaah2kmnL6t6lzGlIo5XqJU35uTJlSon0He\nb3DzZhbS3WAMne4Oip5IwQBA8QNPlgp3KEJ8daxDYQKBgQDDLtxcRVNtfxYzCo4x\n9FSZolw7n1Fs2j0pWcgU9/D5l+vrdZG6ECg+y3/SUpZrB+EM71wbOimjA3VPLpUB\nwwSPwh3yTqVxihA/RMaaQj3QRqATXgDMy0dW2bMiiuUmP75Giv2pt4VIpPD230Zi\npisLaI1Kd5p2k2cLPuRjS/IOBQKBgQC7bNNJVsePl2bfmflK989Ry2FQXuYJewZB\nITsScGzH+hPqzot9I/npSTY5Rva7G5LrczmIFlefCXG9L16lq6wCEkhRxn/El7mP\nsDdRdzKCgVV7X6hleqlgwmZCYl+/QwU2xLpjPPniXtxrvPHhcl+oTQfuZ0wPjeFX\ntOqcUohhyQKBgQCMI8ZGXeRT1w7KYQbNqT9g++k7Sd29yUhmuzbkj00u+DyE1+pk\n7Jro01YYXgHwIT0d+3JnfjBNAfulea21ER/iVB8KThuN1PJraucp9OvK8hqXLURn\nxoCXREHRSGbVOqlUnxEYXVNOYFc++frgc6yuSUhBMnTuNFGlCmgTP4ExPQKBgQCK\nZWRrLjozzJ95ExBjDDO5eU2FdF22uHI425nsFrosvHvCkfusT0l1usrgZodASK8n\nTzE3TRAsbmPfR8BC404jRW7De6jS+RpbgMqITFUuyuPdMxh8vqOdwE6UTGHZMFsE\nQyZCqz71qghnQeD2EWeTNjZaE0q13ZV9Fyl6fvMYCQKBgQCLBzAQUb5zV1JJ2nbz\nb5fC9Qpo34duYsJ4PfInYP6x7QvAVGxRxHTHly3a9p4HwhMIohlMomgLOcr5B4rQ\nnsUnxDqihNw5koa2VmdIgIeEtbb717OvFrLkmSDgQtg4lEveSiIyiqqqmCgFXnb2\njzRlsttm4rrgc5PqfCFp1riSnA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "fashion-campuss@universal-sun-364614.iam.gserviceaccount.com",
+  "client_id": "117469196639764463650",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/fashion-campuss%40universal-sun-364614.iam.gserviceaccount.com"
+}
