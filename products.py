@@ -164,8 +164,12 @@ def productlist():
             category = '0'
         if 'harga' in params:
             price = params['harga']
+            min = price.split(',')[0]
+            max = price.split(',')[1]
         else:
             price = '0'
+            min = 0
+            max = 1000000000
         if 'kondisi' in params:
             condition = params['kondisi']
         else:
@@ -185,17 +189,24 @@ def productlist():
         for i in range(int(page_size) * (int(page)-1), int(page_size) * int(page)):
             if count <= i:
                 break
-            data_dict = {}
-            image = run_query(f"""
-            select image_url from "Image"
-            WHERE product_id = '{data[i]['id']}'
-            limit 1
-            """)[0]['image_url']
-            data_dict['id'] = data[i]['id']
-            data_dict['title'] = data[i]['product_name']
-            data_dict['price'] = data[i]['price']
-            data_dict['image'] = image
-            dataList.append(data_dict)
+            if data[i]['price'] >= int(min) and data[i]['price'] <= int(max):   
+                data_dict = {}
+                image = run_query(f"""
+                select image_url from "Image"
+                WHERE product_id = '{data[i]['id']}'
+                limit 1
+                """)
+
+                if len(image) == 0:
+                    image = '/image/dummy.png'
+                else:
+                    image = image[0]['image_url']
+
+                data_dict['id'] = data[i]['id']
+                data_dict['title'] = data[i]['product_name']
+                data_dict['price'] = data[i]['price']
+                data_dict['image'] = image
+                dataList.append(data_dict)
 
 
         return {"data" : dataList, "total_rows" : len(dataList) }, 200
@@ -273,7 +284,7 @@ def createProduct():
     jwt_token = request.headers.get("Authentication")
     product_name = body["product_name"]
     if 'description' not in body:
-        description = None
+        description = ''
     else:
         description = body["description"]
     condition = body["condition"]

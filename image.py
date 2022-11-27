@@ -13,14 +13,14 @@ def getImage(urlPath):
     #     return send_file(io.BytesIO(conten), mimetype=f"image/{extension}")
     # except:
     #     return {"message" : "error, Image not Found"},400
-    try:    
-        extension = extensionImage(urlPath)
-        if not extensionImage(urlPath):return {"message" : "error, Image not Found"},400
-        # conten = serveImage(urlPath)
-        conten = getStorageImage(urlPath)
-        return send_file(io.BytesIO(conten), mimetype=f"{extension}")
-    except:
-        return {"message" : "error, Image not Found"},400
+    # try:    
+    extension = extensionImage(urlPath)
+    if not extensionImage(urlPath):return {"message" : "error, Image not Found"},400
+    # conten = serveImage(urlPath)
+    conten = getStorageImage(urlPath)
+    return send_file(io.BytesIO(conten), mimetype=f"{extension}")
+    # except:
+    #     return {"message" : "error, Image not Found"},400
 
 
 

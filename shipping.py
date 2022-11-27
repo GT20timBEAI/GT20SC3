@@ -1,51 +1,96 @@
-from flask import Blueprint
+from flask import Blueprint, request
+from utils import validUser, run_query, checkCartUser, totalPrice, timeNow
+import json
+import uuid
 
+shipping_bp = Blueprint("shipping", __name__, url_prefix="/order")
 
-shipping_bp = Blueprint("shipping", __name__)
-
-
-@shipping_bp.route("/shipping_price", methods=["GET"])
-def getShippingPrice():
-    """
-    Catatan:
-        - Hanya bisa diakses oleh user yang sudah login
-        - Hanya bisa diakses oleh user yang sudah memiliki cart 
-        - Dihitung based on cart user yang sekarang
-    Akan ada 2 jenis shipping method:
-        - Regular:
-            Jika total harga item < 200: Shipping price merupakan 15% dari total harga item yang dibeli
-            Jika total harga item >= 200: Shipping price merupakan 20% dari total harga item yang dibeli
-        - Next Day:
-            Jika total harga item < 300: Shipping price merupakan 20% dari total harga item yang dibeli
-            Jika total harga item >= 300: Shipping price merupakan 25% dari total harga item yang dibeli
-    """
-    # FIXME: Auth token
-
-
-    #FIXME: have cart
-
-
-    #TODO: based on cart
-
-
-    #TODO: must complete based on cart
-
-
-@shipping_bp.route("/order", methods=["POST"])
+# Done with frond end
+@shipping_bp.route("", methods=["POST"])
 def createOrder():
-    pass
 
-@shipping_bp.route("/order", methods=["GET"])
-def userOrder():
-    pass
+    # Auth token
+    jwt_token = request.headers.get('Authentication')
+    if not validUser(jwt_token):
+        return {"message": "user not valid"}, 400
 
-# FIXME: In Admin Page
-@shipping_bp.route("/orders", methods=["GET"])
-def getOrder():
-    pass
+    # Initiate request
+    body = request.get_data()
+    body = body.decode('utf-8')
+    body = json.loads(body)
+    shipping_method = body['shipping_method']
+    user = body['shipping_address']
 
-@shipping_bp.route("/sales", methods=["GET"])
-def gettotalsales():
-    pass
+    if user['name'] == None or user['city'] == None or user['address'] == None or user['phone_number'] == None:
+        return {"message" : "Please Change Your Shipping address on admin page"}, 400
 
+    # GET user ID
+    id = run_query(f"""
+    SELECT id FROM "Users"
+    WHERE token = '{jwt_token}'
+    """)[0]['id']
+
+    # CHECK shipping address
+
+
+    # GET balance
+    balance = run_query(f"""
+    SELECT balance FROM "Users"
+    WHERE id = '{id}'
+    """)[0]['balance']
+
+    # GET shipping price
+    data = checkCartUser(id)
+    shipping_price = 0
+    for i in data:
+
+        if i['name'] == shipping_method:
+            shipping_price = i['price']
+        elif i['name'] == shipping_method:
+            shipping_price = i['price']
+    
+    # quantity = run_query("""
+    # SELECT quantity FROM "Car"
+    # WHERE status = "cart" and user_id = '{id}'
+    # """)
+
+    # total price
+    price = totalPrice(id) + shipping_price
+
+    # Check balance enough or not
+    if price > balance:
+        return {"message" : "Your Balance Not enough for complete this order"}
+
+    time = timeNow()
+    order_id = uuid.uuid4()
+
+    # Update Balance on user
+    run_query(f"""
+    UPDATE "Users"
+    SET balance = balance - {price}
+    WHERE id = '{id}'
+    """, True)
+
+    # Update orders on table orders
+    run_query(f"""
+    INSERT INTO "Orders"(order_id, created_at, name, address, city, phone_number)
+    VALUES('{order_id}','{time}', '{user['name']}', '{user['address']}', '{user['city']}', '{user['phone_number']}')
+    """, True)
+
+    # Update status cart
+    run_query(f"""
+    Update "Cart"
+    SET status = 'order', order_id = '{order_id}', shipping_method = '{shipping_method}'
+    WHERE user_id = '{id}' and status = 'cart'
+    """, True)
+
+    # Update sales admin
+    run_query(f"""
+    Update "Users"
+    SET balance = balance + {price}
+    WHERE is_admin = 1
+    """, True)
+
+    
+    return {"message" : "Order success"}, 200
 

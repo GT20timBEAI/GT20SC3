@@ -4,7 +4,106 @@ from datetime import datetime as dt
 import os
 import base64
 
+# get product list for get user order
+def productListUserOrder(product):
+    product_list = []
+    for s in product:
+        data_product = run_query(f"""
+        SELECT product_name, price FROM "Product_list"
+        WHERE id = '{s['item_id']}'
+        """)
+        name = data_product[0]['product_name']
+        price = int(data_product[0]['price']) * int(s['quantity'])
 
+        image = run_query(f"""
+        SELECT image_url FROM "Image"
+        WHERE product_id = '{s['item_id']}'
+        """)
+        
+        if len(image) == 0:
+            image = '/image/dummy.png'
+        else:
+            image = image[0]['image_url']
+
+        dict = {
+            "id": s['item_id'],
+            "details": {
+                "quantity": s['quantity'],
+                "size": s['size']
+            },
+            "price": price,
+            "image": image,
+            "name": name
+            }
+        product_list.append(dict)
+
+    data = {
+        "products": product_list,
+        "shipping_method": product[0]['shipping_method']
+    }
+
+    return data
+
+
+# GET total price from cart
+def totalPrice(id):
+    item = run_query(f"""
+    SELECT item_id, quantity FROM "Cart"
+    WHERE user_id = '{id}' and status = 'cart'
+    """)
+    countPrice = 0
+    for i in item:
+        price = 0
+        price = run_query(f"""
+        SELECT price FROM "Product_list"
+        WHERE id = '{i['item_id']}'
+        """)[0]['price']
+        price *= i['quantity']
+        countPrice += price
+
+    return countPrice
+
+
+
+# check havecart
+def checkCartUser(id):
+    countShippingPrice = 0
+    data = run_query(f"""
+    SELECT item_id FROM "Cart"
+    WHERE user_id = '{id}'
+    """)
+    if len(data) == 0:
+        return False
+    else:
+        for i in data:
+            price = run_query(f"""
+            SELECT price FROM "Product_list"
+            WHERE id = '{i['item_id']}'
+            """)[0]['price']
+            countShippingPrice += price
+    
+    #initiate reguler
+    if countShippingPrice < 200:
+        reguler = countShippingPrice / 100 * 15
+    else:
+        reguler = countShippingPrice / 100 * 20
+
+    #initiate sameday
+    if countShippingPrice < 300:
+        sameday = countShippingPrice / 100 * 20
+    else:
+        sameday = countShippingPrice / 100 * 25
+    
+    data = [
+        {"name" : "regular",
+        "price" : int(reguler)
+        },
+        {"name" : "next day",
+        "price" : int(sameday)
+        }
+    ]
+
+    return data
 
 # get Product list
 def ProductListGet(data):
@@ -17,7 +116,7 @@ def ProductListGet(data):
         limit 1
         """)
         if len(image) == 0:
-            image = []
+            image = '/image/dummy.png'
         else:
             image = image[0]['image_url']
         data_dict['id'] = i['id']
@@ -39,7 +138,6 @@ def ProductListSorted(category_id, sort_by, price, condition, product_name):
         category_id = category_id.split(",")
         category = ''
         for i in range(len(category_id)):
-            print(i)
             category = f"{category}category_id = \'{category_id[i]}\'"
             if i == len(category_id) - 1:
                 category = f"{category} AND "
@@ -48,17 +146,8 @@ def ProductListSorted(category_id, sort_by, price, condition, product_name):
 
     # Initial sorted
     sorted = 'ORDER BY product_name ASC' if sort_by == 'Price a_z' else 'ORDER BY product_name DESC'
-    if sorted == '0':
+    if sort_by == '0':
         sorted = ''
-
-    # initial price
-    if price == '0':
-        price = ''
-    else:
-        price = price.split(',')
-        min = price[0]
-        max = price[1]
-        price = f"AND Price BETWEEN {min} AND {max}  "
     
     # initial condition
     if condition == '0':
@@ -75,13 +164,7 @@ def ProductListSorted(category_id, sort_by, price, condition, product_name):
     data = run_query(f"""
     SELECT id, product_name, price
     FROM "Product_list"
-    WHERE {category}{condition}{product_name} status = 1{price}
-    {sorted}
-    """)
-    print(f"""
-    SELECT id, product_name, price
-    FROM "Product_list"
-    WHERE {category}{condition}{product_name}status = 1{price}
+    WHERE {category}{condition}{product_name} status = 1
     {sorted}
     """)
 
@@ -155,7 +238,7 @@ from google.cloud import storage
 
 def uploadStorage(path):
     project_id = 'universal-sun-364614' 
-    bucket_name = 'fashion-campuss' 
+    bucket_name = 'fashion-campuss-gt20' 
     bucket_file = f'{path}' 
     local_file = f'{path}'
 
@@ -187,7 +270,7 @@ def deleteStorage(fileName):
 def getStorageImage(image):
 
     storageconst = storage.Client()
-    bucket = storageconst.bucket("fashion-campuss")
+    bucket = storageconst.bucket("fashion-campuss-gt20")
     blob = bucket.blob(image)
     with blob.open("rb") as file:
         images = file.read()
@@ -217,7 +300,7 @@ def checkIdCategory(id):
 
 #TODO: time now
 def timeNow():
-    return dt.now().strftime("%A, %d, %B, %Y")
+    return dt.now().strftime("%A, %d %B %Y")
 
 
 #TODO: valid users(True for seller, False for Buyer)

@@ -46,7 +46,7 @@ def getBanner():
             WHERE product_id = '{i['id']}'
             """)
             if len(image) == 0:
-                image = '/image/banner/banner-1.jpg'
+                image = '/image/dummy.png'
             else:
                 image = image[0]['image_url']
             # image = list_image[loop]
@@ -74,12 +74,20 @@ def getCategory():
         SELECT id from "Product_list"
         WHERE category_id = '{id}'
         LIMIT 1
-        """)[0]['id']
+        """)
+        if len(idProduct) == 0:
+            image = '/image/dummy.png'
+        else:
+            idProduct = idProduct[0]['id']
+
         image = run_query(f"""
         SELECT image_url from "Image"
         WHERE product_id = '{idProduct}'
-        """)[0]['image_url']
-
+        """)
+        if len(image) == 0:
+            image = '/image/dummy.png'
+        else:
+            image = image[0]['image_url']
 
         dict["id"] = i["category_id"]
         dict["title"] = i["category_name"]

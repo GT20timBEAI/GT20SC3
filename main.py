@@ -5,8 +5,10 @@ from flask import Flask
 import os
 import uuid
 import datetime
-from utils import run_query, timeNow
+from sales import sales_bp
+from utils import run_query
 from image import image_bp
+from getOrder import getOrder_bp
 from signup import signup_bp
 from utils import get_engine
 from products import products_bp
@@ -16,6 +18,7 @@ from categories import categories_bp
 from cart import cart_bp
 from shipping import shipping_bp
 from user import user_bp
+from shipping_price import price_bp
 from sqlalchemy import (
     MetaData, 
     Table, 
@@ -37,7 +40,7 @@ def create_app():
     app = Flask(__name__)
     cors.init_app(app)
     # always register your blueprint(s) when creating application
-    blueprints = [signup_bp, login_bp, products_bp, home_bp, categories_bp, cart_bp, shipping_bp, user_bp, image_bp]
+    blueprints = [signup_bp, login_bp, products_bp, home_bp, categories_bp, cart_bp, shipping_bp, user_bp, image_bp, price_bp, sales_bp, getOrder_bp]
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
     
@@ -49,7 +52,7 @@ def create_app():
     #     os.remove(db_name)
     # Delete this raw query if development
     # run_query("""
-    #     drop table "Users", "Category", "Product_list", "Banner", "Cart", "Orders", "Buyer_Shipping", "Image"
+    #     drop table "Users", "Category", "Product_list", "Cart", "Orders", "Buyer_Shipping", "Image"
     #     """, True)
     # buat table dengan template ORM dibawah
     engine = get_engine()
@@ -64,7 +67,7 @@ def create_app():
         Column("password", String, nullable=False),
         Column("is_admin", Integer, nullable=True),
         Column("token", String, nullable=True),
-        Column("balance", Integer, nullable=True)
+        Column("balance", BigInteger, nullable=True)
     )
 
     Table(
@@ -92,7 +95,11 @@ def create_app():
         "Orders",
         meta,
         Column("order_id", String, primary_key=True),
-        Column("created_at", DateTime, default=timeNow())
+        Column("created_at", String),
+        Column("name", String, nullable=False),
+        Column("address", String, nullable=False),
+        Column("city", String, nullable=False),
+        Column("phone_number", String, nullable=False)
     )
 
     Table(
@@ -127,6 +134,7 @@ def create_app():
         Column("image_url", String, nullable=False)
     )
 
+    
     meta.create_all(engine)
 
     return app
@@ -136,7 +144,6 @@ def create_app():
 app = create_app()
 
 #TODO: make user admin
-run_query("select * from \"Users\"")
 
 id = uuid.uuid4()
 # run_query(f"insert into \"Users\" (id, name, email, phone_number,\

@@ -1,9 +1,96 @@
 from flask import Blueprint, request
-from utils import run_query, validUser, symbol
+from utils import run_query, validUser, symbol, productListUserOrder
 import json
 
 
 user_bp = Blueprint("user", __name__, url_prefix="/user")
+
+
+@user_bp.route("/order", methods=["GET"])
+def userOrder():
+    # Check user are buyer
+    jwt_token = request.headers.get('Authentication')
+
+    if not validUser(jwt_token):
+        return {"message": "user not valid"}, 400
+
+    user_id = run_query(f"""
+    SELECT id FROM "Users"
+    WHERE token = '{jwt_token}'
+    """)[0]['id']
+
+    order_id = run_query(f"""
+    SELECT DISTINCT order_id FROM "Cart"
+    WHERE user_id = '{user_id}'
+    """)
+
+
+    if order_id[0]['order_id'] == None:
+        return {"data" : []}
+    
+
+    list_data = []
+    for i in order_id:
+        order = run_query(f"""
+        select * FROM "Orders"
+        WHERE order_id = '{i['order_id']}'
+        """)
+
+        product = run_query(f"""
+        SELECT item_id, quantity, size, shipping_method FROM "Cart"
+        WHERE order_id = '{i['order_id']}'
+        """)
+        product_list = productListUserOrder(product)
+
+        data = {
+                "id": i['order_id'],
+                "created_at": order[0]['created_at'],
+                "products": product_list['products'],
+                "shipping_method": product_list['shipping_method'],
+                "shipping_address": {
+                    "name": order[0]['name'],
+                    "phone_number": order[0]['phone_number'],
+                    "address": order[0]['address'],
+                    "city": order[0]['city']
+                }
+            }
+
+        list_data.append(data)
+    
+    return {"data" : list_data}, 200
+
+
+
+
+
+
+    [
+    {
+   	 "id": "uuid",
+   	 "created_at": "Mon, 22 august 2022",
+   	 "products": [
+   		 {
+   			 "id": "uuid",
+   			 "details": {
+   				 "quantity": 100,
+   				 "size": "M"
+   			 },
+   			 "price": 10000,
+   			 "image": "/url/image.jpg",
+   			 "name": "Product a"
+   		 }
+   	 ],
+   	 "shipping_method": "same day",
+   	 "shipping_address": {
+   		 "name": "address name",
+   		 "phone_number": "082713626",
+   		 "address": "22, ciracas, east jakarta",
+   		 "city": "Jakarta"
+   	 }
+    }
+]
+
+
 
 # Done with frond end
 @user_bp.route("/shipping_address", methods=["GET"])
@@ -64,7 +151,7 @@ def userDetail():
         "email": userDetail[0]['email'],
         "phone_number": userDetail[0]['phone_number']
     }
-    return data, 200
+    return {"data" : data}, 200
 
 # Done with front end
 @user_bp.route("/shipping_address", methods=["POST"])
@@ -84,14 +171,15 @@ def changeShippingAddress():
     phone = body['phone_number']
 
     # ceck phone number
-    if symbol(phone): 
-        return {"message": "phone just containt number"},400
+    # if symbol(phone): 
+    #     return {"message": "phone just containt number"},400
 
     run_query(f"""
     Insert into "Buyer_Shipping" (user_id, address, city, name, phone_number)
     VALUES('{id}', '{address}', '{city}', '{name}' , {int(phone)})
     """, True)
     return {
+        "message": "success",
         "name" : name,
         "phone_number" : phone,
         "address" : address,

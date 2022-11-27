@@ -25,10 +25,10 @@ def addtoCart():
     select id from "Users" where token = '{jwt_token}'
     """)[0]['id']
     run_query(f"""
-    Insert into "Cart" (cart_id, item_id, user_id, quantity, size )
-    VALUES ('{cart_id}','{id}','{user_id}',{quantity},'{size}' )
+    Insert into "Cart" (cart_id, item_id, user_id, quantity, size, status )
+    VALUES ('{cart_id}','{id}','{user_id}',{quantity},'{size}', 'cart' )
     """, True)
-    return {"message": "Item added to cart"}, 200
+    return {"message": "success"}, 200
 
 # Front end error
 @cart_bp.route("", methods=["GET"])
@@ -45,7 +45,7 @@ def getUserCart():
 
     cart = run_query(f"""
     select cart_id, quantity, size, item_id from "Cart"
-    WHERE user_id = '{user_id}'
+    WHERE user_id = '{user_id}' and status = 'cart'
     """)
     data = []
     for i in cart:
@@ -66,12 +66,12 @@ def getUserCart():
         detail_dict['quantity'] = i['quantity']
         detail_dict['size'] = i['size']
         dict['id'] = i['cart_id']
-        dict['detail'] = detail_dict
+        dict['details'] = detail_dict
         dict['price'] = item_id['price']
         dict['image'] = image
         dict['name'] = item_id['product_name']
         data.append(dict)
-    return {"data" : data}, 200
+    return {"data" : data, "message" : "success"}, 200
 
 
 
