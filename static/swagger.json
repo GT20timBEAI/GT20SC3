@@ -1,0 +1,48 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "description": "GT20 Team Final Project of Backend Track B-)",
+        "version": "0.0.1",
+        "title": "Startup Campus Backend Final Project",
+        "contact": {
+            "name": "Team GT20",
+            "email": "gt20@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [
+        {
+            "description": "GT20 Team Final Project of Backend Track B-)",
+            "url": "https://345.285.104.104"
+        }
+    ],
+    "externalDocs": {
+        "description": "WEBSITE ALTER GT20 Team Final Project of Backend Track B-)",
+        "url": "https://345.285.104.104"
+    },
+    "tags": [
+        {
+            "name": "Home API",
+            "description": "Home API as an Entrance for Incoming Users"
+        }
+    ],
+    "paths": {
+        "/home/banner": {
+            "get": {
+                "summary": "Fetch all data in database to show them in the home page as banner image",
+                "description": "The data that mentioned in the above summary are meant to image data as it be",
+                "response": {}
+            }
+        },
+        "/home/category": {
+            "get": {
+                "summary": "Fetch all data in database to show them in the home page as category",
+                "description": "The data that mentioned in the above summary are meant to category items to sell in the website",
+                "response": {}
+            }
+        }
+    }
+}
