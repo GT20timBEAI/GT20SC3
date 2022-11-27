@@ -369,30 +369,3 @@ def run_query(query, commit: bool = False):
             conn.commit()
         else:
             return [dict(row) for row in conn.execute(query)]
-
-
-##############################################################################################
-# FOR TESTING
-##############################################################################################
-class COL:
-    BOLD = "\033[1m"
-    PASS = "\033[92m"
-    WARNING = "\033[93m"
-    FAIL = "\033[91m"
-    ENDC = "\033[0m"
-    BLUE = "\033[94m"
-
-
-def assert_eq(expression, expected):
-    try:
-        if expression == expected:
-            return
-    except Exception as e:
-        raise RuntimeError(f"{COL.WARNING}Expression can't be evaluated: {COL.FAIL}{e}{COL.ENDC}")
-
-    errs = [
-        "",
-        f"{COL.BLUE}Expected: {COL.WARNING}{expected}{COL.ENDC}",
-        f"{COL.BLUE}Yours: {COL.FAIL}{expression}{COL.ENDC}",
-    ]
-    raise AssertionError("\n\t".join(errs))

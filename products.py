@@ -439,20 +439,6 @@ def DeleteProducts(urlpath):
     #TODO: check product id
     if not checkProduct(urlpath): return {"message" : "product id not found"}, 400
 
-    # imageBefore = run_query(f"""
-    # SELECT image_url from "Image"
-    # WHERE product_id like {urlpath}%
-    # """)
-
-    #Delete image_url from Google Storage
-    # for i in imageBefore:
-    #     deleteStorage(i)
-
-    #Delete image_url on database
-    # run_query(f"""
-    # DELETE FROM "Image" where product_id like '{urlpath}%'
-    # """, True)
-
     # Delete product on database
     print(urlpath)
     run_query(f"""

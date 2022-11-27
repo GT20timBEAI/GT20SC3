@@ -49,7 +49,6 @@ Requirements (from the earliest to check):
     save token to config["token"]
 """
 
-
 from flask import Blueprint, request
 from utils import run_query, inValid
 import jwt
@@ -98,8 +97,4 @@ def login():
 
     return {"message": "Email is not registered"}, 409
 
-
-    # #TODO if email or password not entered                
-    # except:
-    #     return {"message" : "Email or password not entered"}, 400
 

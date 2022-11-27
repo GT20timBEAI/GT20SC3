@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from utils import run_query, validUser, symbol, productListUserOrder
+from utils import run_query, validUser,  productListUserOrder
 import json
 
 
@@ -58,38 +58,6 @@ def userOrder():
         list_data.append(data)
     
     return {"data" : list_data}, 200
-
-
-
-
-
-
-    [
-    {
-   	 "id": "uuid",
-   	 "created_at": "Mon, 22 august 2022",
-   	 "products": [
-   		 {
-   			 "id": "uuid",
-   			 "details": {
-   				 "quantity": 100,
-   				 "size": "M"
-   			 },
-   			 "price": 10000,
-   			 "image": "/url/image.jpg",
-   			 "name": "Product a"
-   		 }
-   	 ],
-   	 "shipping_method": "same day",
-   	 "shipping_address": {
-   		 "name": "address name",
-   		 "phone_number": "082713626",
-   		 "address": "22, ciracas, east jakarta",
-   		 "city": "Jakarta"
-   	 }
-    }
-]
-
 
 
 # Done with frond end
@@ -169,10 +137,6 @@ def changeShippingAddress():
     city = body['city']
     name = body['name']
     phone = body['phone_number']
-
-    # ceck phone number
-    # if symbol(phone): 
-    #     return {"message": "phone just containt number"},400
 
     run_query(f"""
     Insert into "Buyer_Shipping" (user_id, address, city, name, phone_number)

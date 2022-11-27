@@ -13,12 +13,7 @@ def getOrder():
     jwt_token = request.headers.get("Authentication")
     if not validUser(jwt_token, True): 
         return {"message" : "user not valid"}, 400
-
-    # params = request.args
-    # sort_by = params['sort_by']
-    # page = params['page']
-    # page_size = params['page_size']
-
+        
     order_id = run_query("""
     SELECT order_id, created_at from "Orders"
     """)

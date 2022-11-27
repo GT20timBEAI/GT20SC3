@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from utils import validUser, run_query, checkIdCategory, checkCategoryName
+from utils import validUser, run_query, checkCategoryName
 import uuid
 import json
 

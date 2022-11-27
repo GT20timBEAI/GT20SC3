@@ -1,28 +1,3 @@
-"""
-- response get banner
-        {
-            "data": [
-            {
-                "id": "uuid",
-                "image": "/banner/image.png",
-                "title": "lorem ipsum blablabla"
-            }
-            ]
-        }
-
-- response home/category
-    {
-    "data": [
-   	     {
-   		 "id": "uuid",
-   		 "image": "/something/image.png",
-   		 "title": "Category A"
-   	     }
-            ]
-    }
-
-"""
-
 
 from flask import Blueprint
 from utils import run_query

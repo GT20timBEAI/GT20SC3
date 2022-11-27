@@ -48,11 +48,6 @@ def createOrder():
             shipping_price = i['price']
         elif i['name'] == shipping_method:
             shipping_price = i['price']
-    
-    # quantity = run_query("""
-    # SELECT quantity FROM "Car"
-    # WHERE status = "cart" and user_id = '{id}'
-    # """)
 
     # total price
     price = totalPrice(id) + shipping_price
