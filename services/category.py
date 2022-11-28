@@ -1,4 +1,4 @@
-from service.utils import run_query
+from services.utils import run_query
 
 def checkCategoryName(category):
     name = run_query("""

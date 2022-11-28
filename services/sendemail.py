@@ -1,6 +1,6 @@
 import smtplib
 import ssl
-from service.template import templateHTML
+from services.template import templateHTML
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import pandas as pd

@@ -1,7 +1,7 @@
 
 from flask import Blueprint,request
-from service.utils import run_query
-from service.auth import inValid, symbol
+from services.utils import run_query
+from services.auth import inValid, symbol
 import uuid
 
 

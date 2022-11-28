@@ -1,4 +1,4 @@
-from service.utils import run_query
+from services.utils import run_query
 
 # get product list for get user order
 def productListUserOrder(product):

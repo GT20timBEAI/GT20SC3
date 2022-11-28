@@ -1,4 +1,4 @@
-from service.utils import run_query
+from services.utils import run_query
 
 # check havecart
 def checkCartUser(id):

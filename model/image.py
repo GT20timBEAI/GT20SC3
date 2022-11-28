@@ -1,6 +1,6 @@
 from flask import Blueprint, send_file
 import io
-from service.image import  extensionImage, getStorageImage
+from services.image import  extensionImage, getStorageImage
 
 
 image_bp = Blueprint("image", __name__, url_prefix="/image/<path:urlPath>")

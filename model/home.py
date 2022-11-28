@@ -1,6 +1,6 @@
 
 from flask import Blueprint
-from service.utils import run_query
+from services.utils import run_query
 
 home_bp = Blueprint("home", __name__, url_prefix="/home")
 

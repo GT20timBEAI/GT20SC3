@@ -1,6 +1,6 @@
 from flask import Blueprint, request
-from service.utils import run_query, validUser
-from service.user import productListUserOrder
+from services.utils import run_query, validUser
+from services.user import productListUserOrder
 import json
 
 

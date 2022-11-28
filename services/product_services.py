@@ -1,4 +1,4 @@
-from service.utils import run_query
+from services.utils import run_query
 from google.cloud import storage
 
 # TODO: check product id

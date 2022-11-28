@@ -3,7 +3,7 @@ from model.sales import sales_bp
 from model.image import image_bp
 from model.getOrder import getOrder_bp
 from model.signup import signup_bp
-from service.utils import get_engine
+from services.utils import get_engine
 from model.products import products_bp
 from model.home import home_bp
 from model.login import login_bp
