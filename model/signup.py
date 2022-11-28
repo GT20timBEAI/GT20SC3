@@ -1,7 +1,9 @@
 
 from flask import Blueprint,request
-from utils import inValid, run_query, symbol
+from service.utils import run_query
+from service.auth import inValid, symbol
 import uuid
+
 
 signup_bp = Blueprint("signup", __name__, url_prefix="/sign-up")
 

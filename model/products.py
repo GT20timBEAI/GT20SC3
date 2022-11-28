@@ -110,23 +110,22 @@ Requirements (from the earliest to check):
 
 """
 
-
 from flask import Blueprint, request
-from utils import (
+from service.utils import (
     run_query, 
-    validUser, 
-    allowed_file, 
-    checkProduct, 
-    symbol,
-    deleteStorage, 
-    base64_split, 
+    validUser
+    )
+from service.product_services import (
+    checkProduct,
+    deleteStorage,
+    base64_split,
     uploadStorage,
     ProductListSorted,
-    countProductList, 
     ProductListGet
-    )
+
+)
+from service.auth import symbol
 import uuid
-from werkzeug.utils import secure_filename
 import os
 import base64
 import json
@@ -319,7 +318,7 @@ def createProduct():
         list.append(f'{product_name}{no}.png')
         
         #delete file
-        os.remove(f'{product_name}{no}.png')
+        os.remove(f'../app/{product_name}{no}.png')
         no += 1
 
     #TODO: insert into database product_list

@@ -50,7 +50,8 @@ Requirements (from the earliest to check):
 """
 
 from flask import Blueprint, request
-from utils import run_query, inValid
+from service.utils import run_query
+from service.auth import inValid
 import jwt
 
 login_bp = Blueprint("login", __name__, url_prefix="/sign-in")

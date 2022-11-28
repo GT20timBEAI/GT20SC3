@@ -1,6 +1,7 @@
 *.pyc
 __pycache__/
+service/__pycache__/
+app/__pycache__/
+model/__pycache__/
 
-
-# SQLite
 darul/

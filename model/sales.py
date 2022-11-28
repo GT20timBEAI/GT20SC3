@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from utils import validUser, run_query
+from service.utils import validUser, run_query
 
 sales_bp = Blueprint("sales", __name__, url_prefix="/sales")
 

@@ -7,3 +7,4 @@ uuid==1.30
 google-cloud-storage==2.1.0
 Flask-Cors==3.0.10 
 python-dotenv==0.21.0  
+pandas==1.5.2

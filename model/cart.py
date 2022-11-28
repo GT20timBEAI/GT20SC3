@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from utils import run_query, validUser
+from service.utils import run_query, validUser
 import uuid
 import json
 
@@ -8,11 +8,10 @@ cart_bp = Blueprint("cart", __name__, url_prefix="/cart")
 # DONE With Frond END
 @cart_bp.route("", methods=["POST"])
 def addtoCart():
-
     jwt_token = request.headers.get('Authentication')
 
     if not validUser(jwt_token):
-        return {"message": "user not valid"}, 400
+        return {"message": "user not valid or try login again"}, 400
 
     body = request.get_data()
     body = body.decode('utf-8')

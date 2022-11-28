@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from utils import validUser, run_query
+from service.utils import validUser, run_query
 
 
 
@@ -33,7 +33,7 @@ def getOrder():
             SELECT price FROM "Product_list"
             WHERE id = '{pri['item_id']}'
             """)[0]['price']
-            get_price = get_price + pri['quantity']
+            get_price = get_price * pri['quantity']
             price = price + get_price
     
 

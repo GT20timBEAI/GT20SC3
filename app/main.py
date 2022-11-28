@@ -1,25 +1,22 @@
 from flask import Flask
-import uuid
-from sales import sales_bp
-from utils import run_query
-from image import image_bp
-from getOrder import getOrder_bp
-from signup import signup_bp
-from utils import get_engine
-from products import products_bp
-from home import home_bp
-from login import login_bp
-from categories import categories_bp
-from cart import cart_bp
-from shipping import shipping_bp
-from user import user_bp
-from shipping_price import price_bp
+from model.sales import sales_bp
+from model.image import image_bp
+from model.getOrder import getOrder_bp
+from model.signup import signup_bp
+from service.utils import get_engine
+from model.products import products_bp
+from model.home import home_bp
+from model.login import login_bp
+from model.categories import categories_bp
+from model.cart import cart_bp
+from model.shipping import shipping_bp
+from model.user import user_bp
+from model.shipping_price import price_bp
 from sqlalchemy import (
     MetaData, 
     Table, 
     Column, 
     String, 
-    create_engine,
     Integer,
     ForeignKey,
     BigInteger
@@ -36,6 +33,11 @@ def create_app():
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
     
+
+    # id = uuid.uuid4()
+    # run_query(f"insert into \"Users\" (id, name, email, phone_number,\
+    #     password,is_admin, balance) VALUES (\'{id}\', \'Darul\', \'gt20@gmail.com\',\
+    #         6285268487441, \'Qwerty123\', 1, '0')", True)
     # run_query("""
     #     drop table "Users", "Category", "Product_list", "Cart", "Orders", "Buyer_Shipping", "Image"
     #     """, True)

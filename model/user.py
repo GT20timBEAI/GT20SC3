@@ -1,5 +1,6 @@
 from flask import Blueprint, request
-from utils import run_query, validUser,  productListUserOrder
+from service.utils import run_query, validUser
+from service.user import productListUserOrder
 import json
 
 
@@ -21,7 +22,7 @@ def userOrder():
 
     order_id = run_query(f"""
     SELECT DISTINCT order_id FROM "Cart"
-    WHERE user_id = '{user_id}'
+    WHERE user_id = '{user_id}' and status = 'order'
     """)
 
 
@@ -38,7 +39,7 @@ def userOrder():
 
         product = run_query(f"""
         SELECT item_id, quantity, size, shipping_method FROM "Cart"
-        WHERE order_id = '{i['order_id']}'
+        WHERE order_id = '{i['order_id']}' and status = 'order'
         """)
         product_list = productListUserOrder(product)
 

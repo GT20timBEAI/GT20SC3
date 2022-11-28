@@ -1,5 +1,6 @@
 from flask import Blueprint, request
-from utils import validUser, run_query, checkCartUser
+from service.utils import validUser, run_query
+from service.shipping import checkCartUser
 import json
 
 

@@ -1,5 +1,7 @@
 from flask import Blueprint, request
-from utils import validUser, run_query, checkCartUser, totalPrice, timeNow
+from service.utils import validUser, run_query,  timeNow
+from service.shipping import checkCartUser, totalPrice
+from service.sendemail import sendOrderEmail
 import json
 import uuid
 
@@ -35,9 +37,9 @@ def createOrder():
 
     # GET balance
     balance = run_query(f"""
-    SELECT balance FROM "Users"
+    SELECT name, balance, email FROM "Users"
     WHERE id = '{id}'
-    """)[0]['balance']
+    """)[0]
 
     # GET shipping price
     data = checkCartUser(id)
@@ -53,8 +55,11 @@ def createOrder():
     price = totalPrice(id) + shipping_price
 
     # Check balance enough or not
-    if price > balance:
+    if price > balance['balance']:
         return {"message" : "Your Balance Not enough for complete this order"}
+
+    # send total price to email user
+    sendOrderEmail(balance['name'], int(price), balance['email'])
 
     time = timeNow()
     order_id = uuid.uuid4()
@@ -85,6 +90,12 @@ def createOrder():
     SET balance = balance + {price}
     WHERE is_admin = 1
     """, True)
+
+    print(f"""
+    Update "Users"
+    SET balance = balance + {price}
+    WHERE is_admin = 1
+    """)
 
     
     return {"message" : "Order success"}, 200
