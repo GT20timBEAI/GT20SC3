@@ -1,0 +1,9 @@
+version: "3.3"
+
+services:
+   webapps:
+     image: webapps
+     ports:
+     - '5000:5000'
+     env_file:
+     - .env
