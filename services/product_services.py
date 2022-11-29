@@ -66,7 +66,11 @@ def ProductListSorted(category_id, sort_by, price, condition, product_name):
     if condition == '0':
         condition = ''
     else:
-        condition = f"condition = \'{condition}\' AND "
+        condition = condition.split(',')
+        if len(condition) == 1:
+            condition = f"condition = \'{condition[0]}\' AND "
+        else:
+            condition = f"condition = \'{condition[0]}\' OR condition = \'{condition[1]}\' AND "
     
     # inital product name
     if product_name == '0':

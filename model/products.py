@@ -183,7 +183,6 @@ def productlist():
 
         # count product 
         count = len(data)
-        print(data)
         dataList = []
         for i in range(int(page_size) * (int(page)-1), int(page_size) * int(page)):
             if count <= i:

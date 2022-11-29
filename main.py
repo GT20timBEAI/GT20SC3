@@ -23,6 +23,7 @@ from sqlalchemy import (
     )
 from flask_cors import CORS
 
+
 cors = CORS()
 
 def create_app():
@@ -38,9 +39,9 @@ def create_app():
     # run_query(f"insert into \"Users\" (id, name, email, phone_number,\
     #     password,is_admin, balance) VALUES (\'{id}\', \'Darul\', \'gt20@gmail.com\',\
     #         6285268487441, \'Qwerty123\', 1, '0')", True)
-    # run_query("""
-    #     drop table "Users", "Category", "Product_list", "Cart", "Orders", "Buyer_Shipping", "Image"
-    #     """, True)
+    # # run_query("""
+    # #     drop table "Users", "Category", "Product_list", "Cart", "Orders", "Buyer_Shipping", "Image"
+    # #     """, True)
     # buat table dengan template ORM dibawah
     engine = get_engine()
     meta = MetaData()
@@ -125,4 +126,3 @@ def create_app():
     meta.create_all(engine)
 
     return app
-

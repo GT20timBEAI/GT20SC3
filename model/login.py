@@ -53,6 +53,7 @@ from flask import Blueprint, request
 from services.utils import run_query
 from services.auth import inValid
 import jwt
+import uuid
 
 login_bp = Blueprint("login", __name__, url_prefix="/sign-in")
 
@@ -81,8 +82,9 @@ def login():
     for i in users:
         if i["email"] == email:
             if i["password"] == password:
+                id = uuid.uuid4()
                 token = jwt.encode({"email" : email},
-                "inirahasiakita") #dont using algorithm because on output jwt not be
+                id) #dont using algorithm because on output jwt not be
                                   #available to use this case 
                 # jwt.decode(token, "inirahasiakita", algorithms=["RS256"]
                 type = "buyer" if i["is_admin"] == 0  else "seller"
