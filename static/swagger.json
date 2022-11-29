@@ -522,7 +522,7 @@
         "/cart": {
             "post": {
                 "tags": [
-                    "PRODUCT DETAIL PAGE"
+                    "CART"
                 ],
                 "summary": "Add product to user's cart",
                 "security": [
@@ -561,6 +561,60 @@
                                     "properties": {
                                         "message": {
                                             "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "CART"
+                ],
+                "summary": "Get product's information in detail",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success get product's detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "details": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "quantity": {
+                                                        "type": "integer"
+                                                    },
+                                                    "size": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "price": {
+                                                "type": "integer"
+                                            },
+                                            "image": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            }
                                         }
                                     }
                                 }
