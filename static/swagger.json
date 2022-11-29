@@ -19,29 +19,238 @@
             "url": "https://345.285.104.104"
         }
     ],
-    "externalDocs": {
-        "description": "WEBSITE ALTER GT20 Team Final Project of Backend Track B-)",
-        "url": "https://345.285.104.104"
-    },
-    "tags": [
-        {
-            "name": "Home API",
-            "description": "Home API as an Entrance for Incoming Users"
-        }
-    ],
     "paths": {
+        "/image/<path:urlPath>": {
+            "get": {
+                "tags": [
+                    "UNIVERSAL"
+                ],
+                "summary": "Get Image to Show In The Platform",
+                "description": "TBA",
+                "responses": {
+                    "200": {}
+                }
+            }
+        },
         "/home/banner": {
             "get": {
+                "tags": [
+                    "HOME"
+                ],
                 "summary": "Fetch all data in database to show them in the home page as banner image",
                 "description": "The data that mentioned in the above summary are meant to image data as it be",
-                "response": {}
+                "responses": {
+                    "200": {
+                        "description": "Success Get Banner",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "image": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/home/category": {
             "get": {
+                "tags": [
+                    "HOME"
+                ],
                 "summary": "Fetch all data in database to show them in the home page as category",
                 "description": "The data that mentioned in the above summary are meant to category items to sell in the website",
-                "response": {}
+                "responses": {
+                    "200": {
+                        "description": "Success Get Category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "image": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign-up": {
+            "post": {
+                "tags": [
+                    "AUTHENTICATION"
+                ],
+                "summary": "Signing Up a New Account For User",
+                "description": "Signing Up with an email, password, and phone number with some policy in every user data",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "required": true,
+                                        "minLength": 5
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "phone_number": {
+                                        "type": "integer",
+                                        "required": true,
+                                        "minLength": 12
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "required": true,
+                                        "minLength": 8
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success, user created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {}
+                }
+            }
+        },
+        "/sign-in": {
+            "post": {
+                "tags": [
+                    "AUTHENTICATION"
+                ],
+                "summary": "Sign in to the website with registered account",
+                "description": "If any wrong credential while inputing your data, the website would give 400 status code",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "required": true,
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "phone_number": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
