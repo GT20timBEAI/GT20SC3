@@ -20,7 +20,7 @@
         }
     ],
     "paths": {
-        "/image/<path:urlPath>": {
+        "/image/{urlPath}": {
             "get": {
                 "tags": [
                     "UNIVERSAL"
@@ -249,6 +249,188 @@
                                 }
                             }
                         }
+                    },
+                    "400": {}
+                }
+            }
+        },
+        "/products": {
+            "get": {
+                "tags": [
+                    "PRODUCT LIST"
+                ],
+                "summary": " Get an available product from website's catalog",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "condition",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "product_name",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Get Product List",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "image": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "price": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "text/plain; charset=utf-8": {
+                                "schema": {
+                                    "type": "integer",
+                                    "properties": {
+                                        "total_rows": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "get": {
+                "tags": [
+                    "PRODUCT LIST"
+                ],
+                "summary": "Get Category for Searching Items",
+                "responses": {
+                    "200": {
+                        "description": "Success Get Category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/search_image": {
+            "post": {
+                "tags": [
+                    "PRODUCT LIST"
+                ],
+                "summary": "Search a product by image using base64 encoded string",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/vnd.github.base64": {
+                            "schema": {
+                                "type": "string",
+                                "properties": {
+                                    "image": {
+                                        "type": "string",
+                                        "required": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "aaa",
+                        "content": {}
                     }
                 }
             }
