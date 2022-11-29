@@ -626,6 +626,51 @@
                     }
                 }
             }
+        },
+        "/user/shipping_address": {
+            "get": {
+                "tags": [
+                    "CART"
+                ],
+                "summary": "Get user shipping address data in detail",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Get User's Shipping Address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "phone_number": {
+                                            "type": "string"
+                                        },
+                                        "address": {
+                                            "type": "string"
+                                        },
+                                        "city": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
         }
     }
 }
