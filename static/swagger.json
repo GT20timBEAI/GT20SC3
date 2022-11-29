@@ -430,7 +430,75 @@
                 "responses": {
                     "200": {
                         "description": "aaa",
-                        "content": {}
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "tags": [
+                    "PRODUCT DETAIL PAGE"
+                ],
+                "summary": "Get detail information from an item",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Get Product Detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "size": {
+                                            "type": "string"
+                                        },
+                                        "product_detail": {
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "type": "integer"
+                                        },
+                                        "images_url": {
+                                            "type": "string"
+                                        },
+                                        "category_id": {
+                                            "type": "string"
+                                        },
+                                        "category_name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
