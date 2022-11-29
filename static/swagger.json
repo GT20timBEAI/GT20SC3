@@ -28,6 +28,11 @@
                 "in": "header",
                 "name": "JWT-FC"
             }
+        },
+        "responses": {
+            "UnauthorizedError": {
+                "description": "Access token is missing or invalid"
+            }
         }
     },
     "paths": {
@@ -510,6 +515,60 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/cart": {
+            "post": {
+                "tags": [
+                    "PRODUCT DETAIL PAGE"
+                ],
+                "summary": "Add product to user's cart",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    },
+                                    "size": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product added to cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
                     }
                 }
             }
