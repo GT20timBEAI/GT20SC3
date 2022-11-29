@@ -19,6 +19,17 @@
             "url": "https://345.285.104.104"
         }
     ],
+    "components": {
+        "securitySchemes": {
+            "Fashion-Campus-Auth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "in": "header",
+                "name": "JWT-FC"
+            }
+        }
+    },
     "paths": {
         "/image/{urlPath}": {
             "get": {
