@@ -1,5 +1,5 @@
 from flask import Blueprint
-from utils import run_query, validUser
+from utils import run_query, validUser, isCartIdExist
 
 cart_bp = Blueprint("cart", __name__, url_prefix="/cart")
 
@@ -51,5 +51,18 @@ def getUserCart():
 
 
 @cart_bp.route("/{cart_id}", methods=["DELETE"])
-def deleteCartItem():
-    pass
+def deleteCartItem(cartId):
+    try:
+        jwt_token = request.headers.get('Authentication')
+        if not validUser(jwt_token, True):
+            return {"error": "user not valid"}, 400
+        
+        # if not isCartIdExist(cartId):
+        #     return {"error": "cart not found"}, 400
+
+        run_query(f'DELETE FROM Cart where Cart_id = \'{cartId}\'')
+
+        return {"message" : "Cart Deleted"}, 200
+    
+    except KeyError():
+        return {"message": "user already exist"}
