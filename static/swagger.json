@@ -1717,6 +1717,54 @@
                     }
                 }
             }
+        },
+        "/sales": {
+            "get": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Get total sales of selling product",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responses for successfully get total sales",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "get total sales": {
+                                        "description": "Example of successfully getting total sales",
+                                        "value": {
+                                            "data": {
+                                                "total": 1000000000
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
         }
     }
 }
