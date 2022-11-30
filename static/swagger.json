@@ -1098,6 +1098,122 @@
                     }
                 }
             }
+        },
+        "/user/order": {
+            "get": {
+                "tags": [
+                    "PROFILE PAGE"
+                ],
+                "summary": "Get all information from user's order",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success get user's order",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string"
+                                        },
+                                        "products": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "details": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "quantity": {
+                                                                "type": "integer"
+                                                            },
+                                                            "size": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "price": {
+                                                        "type": "integer"
+                                                    },
+                                                    "image": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "shipping_method": {
+                                            "type": "string"
+                                        },
+                                        "shipping_address": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "phone_number": {
+                                                    "type": "string"
+                                                },
+                                                "address": {
+                                                    "type": "string"
+                                                },
+                                                "city": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success get user's order detail",
+                                        "value": [
+                                            {
+                                                "id": "bd93ccda-2342-4698-aefc-fc44e187be26",
+                                                "created_at": "Fri, 27 August 2022",
+                                                "product": [
+                                                    {
+                                                        "id": "356ffd58-72d1-40f9-9e39-8bdf3020ccaa",
+                                                        "details": {
+                                                            "quantity": 20,
+                                                            "size": "L"
+                                                        },
+                                                        "price": 100000,
+                                                        "image": "/static/blazer_barcelona.png",
+                                                        "name": "Decul Garis Keras"
+                                                    }
+                                                ],
+                                                "shipping_method": "Same day",
+                                                "shipping_address": {
+                                                    "address_name": "Anthony Milinkovic",
+                                                    "phone_number": "082145421945",
+                                                    "address": "Jl Juventus Turin Allianz Stadium",
+                                                    "city": "Turin"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
         }
     }
 }
