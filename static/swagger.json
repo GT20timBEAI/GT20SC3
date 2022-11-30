@@ -589,6 +589,68 @@
                         }
                     }
                 }
+            },
+            "post": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Add category of product by Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string",
+                                "properties": {
+                                    "category_name": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "create_product": {
+                                    "description": "Example of correct request body for creating product",
+                                    "value": {
+                                        "category_name": "Accessories"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response for successfully create new product category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "create_product": {
+                                        "description": "Response for successfully create new product category",
+                                        "value": {
+                                            "message": "Category added"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
             }
         },
         "/products/search_image": {
