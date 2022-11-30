@@ -670,6 +670,89 @@
                         "$ref": "#components/responses/UnauthorizedError"
                     }
                 }
+            },
+            "post": {
+                "tags": [
+                    "PROFILE PAGE"
+                ],
+                "summary": "Change user's shipping address data",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "phone_number": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "success": {
+                                    "description": "Success for updating data",
+                                    "value": {
+                                        "name": "Anthony Milinkovic",
+                                        "phone_number": "082145421945",
+                                        "address": "Jl Juventus Turin Allianz Stadium",
+                                        "city": "Turin"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success for updating data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "phone_number": {
+                                            "type": "string"
+                                        },
+                                        "address": {
+                                            "type": "string"
+                                        },
+                                        "city": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success for updating data",
+                                        "value": {
+                                            "name": "Anthony Milinkovic",
+                                            "phone_number": "082145421945",
+                                            "address": "Jl Juventus Turin Allianz Stadium",
+                                            "city": "Turin"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/shipping_price": {
