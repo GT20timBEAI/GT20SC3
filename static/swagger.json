@@ -1128,7 +1128,7 @@
                 }
             }
         },
-        "/cart/cart_id": {
+        "/cart/{cart_id}": {
             "delete": {
                 "tags": [
                     "CART"
@@ -1144,7 +1144,7 @@
                         "name": "cart_id",
                         "description": "parameter where the id of product exist for deleting purpose",
                         "required": true,
-                        "in": "query",
+                        "in": "path",
                         "schema": {
                             "type": "string"
                         }
@@ -1562,7 +1562,7 @@
                         "name": "product_id",
                         "description": "product id of target product",
                         "required": true,
-                        "in": "query",
+                        "in": "path",
                         "schema": {
                             "type": "string"
                         }
@@ -1591,6 +1591,129 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/categories/{category_id}": {
+            "put": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Updating existing certain category by Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string",
+                                "properties": {
+                                    "category_name": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "updating category": {
+                                    "description": "Example of correct request body for updating category",
+                                    "value": {
+                                        "category_name": "Hat"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Responses for successfully updating category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "updating category": {
+                                        "description": "Example of successfully updating category by Admin",
+                                        "value": {
+                                            "message": "Category updated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Deleting certain category from Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responses for successfully deleting category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "deleting category": {
+                                        "description": "Example of successfully deleting category by Admin",
+                                        "value": {
+                                            "message": "Category deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
                     }
                 }
             }
