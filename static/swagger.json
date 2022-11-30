@@ -809,6 +809,55 @@
                     }
                 }
             }
+        },
+        "/cart/cart_id": {
+            "delete": {
+                "tags": [
+                    "CART"
+                ],
+                "summary": "Delete one product from user's cart",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "parameter where the id of product exist for deleting purpose",
+                        "required": true,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success deleting product from cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Cart deleted",
+                                        "value": {
+                                            "message": "Cart deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
