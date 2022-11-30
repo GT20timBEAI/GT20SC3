@@ -725,6 +725,90 @@
                     }
                 }
             }
+        },
+        "/order": {
+            "post": {
+                "tags": [
+                    "CART"
+                ],
+                "summary": "Process an order from user",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "properties": {
+                                    "shipping_method": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "phone_number": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "success": {
+                                    "description": "Success created an order",
+                                    "value": [
+                                        {
+                                            "shipping_method": "Same day"
+                                        },
+                                        {
+                                            "name": "Anthony",
+                                            "phone_number": "082145427945",
+                                            "address": "Jl Manchester City Etihad Stadium",
+                                            "city": "Manchester"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Order success",
+                                        "value": {
+                                            "message": "Order success"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
         }
     }
 }
