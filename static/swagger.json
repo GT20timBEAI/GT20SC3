@@ -1056,6 +1056,47 @@
                         "$ref": "#components/responses/UnauthorizedError"
                     }
                 }
+            },
+            "get": {
+                "tags": [
+                    "PROFILE PAGE"
+                ],
+                "summary": "Get current user's balance",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success getting user's balance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "balance": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success getting user's balance",
+                                        "value": {
+                                            "balance": 1000000
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
             }
         }
     }
