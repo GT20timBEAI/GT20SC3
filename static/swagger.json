@@ -384,6 +384,91 @@
                         }
                     }
                 }
+            },
+            "post": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Add product by Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "product_name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "images": {
+                                        "type": "array"
+                                    },
+                                    "condition": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "Request Body": {
+                                    "description": "Example of correct request body",
+                                    "value": {
+                                        "product_name": "Barcelona 2011/2012 Long Sleeve Original Jersey",
+                                        "description": "Jersey where Barcelona win Champions League and Club World Cup Trophy",
+                                        "images": [
+                                            "Barcelona_Home_2011/2012.png",
+                                            "Barcelona_Away_2011/2012.png"
+                                        ],
+                                        "condition": "New",
+                                        "category": "Shirt",
+                                        "price": 1500000
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Responses for successfully adding product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Example of success add product from admin",
+                                        "value": {
+                                            "message": "Product added"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
             }
         },
         "/categories": {
@@ -1204,6 +1289,105 @@
                                                 }
                                             }
                                         ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/orders": {
+            "get": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Get order data of user",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sort_by",
+                        "description": "Sorting item with certain condition",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success get user's order detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "user_name": {
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "user_id": {
+                                                        "type": "string"
+                                                    },
+                                                    "user_email": {
+                                                        "type": "string"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success get user's order detail",
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": "11987fc5-c3b9-427a-9999-9dcca19cc649",
+                                                    "user_name": "Donquixote Doflamingo",
+                                                    "created_at": "Fri, 27 August 2022",
+                                                    "user_id": "f190fa41-a38a-4ee2-bef1-ad83723978dd",
+                                                    "user_email": "doflamingo@onepiece.com",
+                                                    "total": "30"
+                                                }
+                                            ]
+                                        }
                                     }
                                 }
                             }
