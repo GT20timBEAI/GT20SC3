@@ -469,6 +469,91 @@
                         "$ref": "#components/responses/UnauthorizedError"
                     }
                 }
+            },
+            "put": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Update product by Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "product_name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "images": {
+                                        "type": "array"
+                                    },
+                                    "condition": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "Request Body": {
+                                    "description": "Example of correct request body",
+                                    "value": {
+                                        "product_name": "Real Madrid Long Sleeve Original Jersey",
+                                        "description": "Jersey where Real Madird win Champions League in 2018",
+                                        "images": [
+                                            "Real_Madrid_Home_2018/2019.png",
+                                            "Real_Madrid_Away_2018/2019.png"
+                                        ],
+                                        "condition": "New",
+                                        "category": "Shirt",
+                                        "price": 1500000
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Responses for successfully updating product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Example of success updating product from admin",
+                                        "value": {
+                                            "message": "Product updated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
             }
         },
         "/categories": {
