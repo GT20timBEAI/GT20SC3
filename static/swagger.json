@@ -751,6 +751,9 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
                     }
                 }
             }
@@ -979,6 +982,70 @@
                                             "name": "Anthony",
                                             "email": "anthony@manchester.com",
                                             "phone_number": "082145427945"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/user/balance": {
+            "post": {
+                "tags": [
+                    "PROFILE PAGE"
+                ],
+                "summary": "Add balance to user's money",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string",
+                                "properties": {
+                                    "amount": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "success": {
+                                    "description": "Success create balance",
+                                    "value": {
+                                        "amount": 1000000
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success create balance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success create balance",
+                                        "value": {
+                                            "message": "Top up balance success"
                                         }
                                     }
                                 }
