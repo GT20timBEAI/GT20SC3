@@ -15,8 +15,7 @@
     },
     "servers": [
         {
-            "description": "GT20 Team Final Project of Backend Track B-)",
-            "url": "https://345.285.104.104"
+            "url": "http://fashion-campus-gt20.my.id:5000"
         }
     ],
     "components": {
@@ -42,9 +41,47 @@
                     "UNIVERSAL"
                 ],
                 "summary": "Get Image to Show In The Platform",
-                "description": "TBA",
+                "description": "Get image from google cloud storage",
+                "parameters": [
+                    {
+                        "name": "urlPath",
+                        "required": true,
+                        "in": "path"
+                    }
+                ],
                 "responses": {
-                    "200": {}
+                    "200": {
+                        "content": {
+                            "image/png": {
+                                "schema": {
+                                    "type": "image/png",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "displaying image": {
+                                        "description": "Responses for failed get an image from Google Cloud Storage",
+                                        "value": {
+                                            "message": "Error, image not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -78,6 +115,19 @@
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Get Banner": {
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": "11987fc5-c3b9-427a-9999-9dcca19cc649",
+                                                    "image": "/static/Home_Barcelona.png",
+                                                    "title": "Barcelona Home Jersey Champions League Winner"
+                                                }
+                                            ]
                                         }
                                     }
                                 }
@@ -132,6 +182,19 @@
                                                     }
                                                 }
                                             }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Get Category": {
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": "11987fc5-c3b9-427a-9999-9dcca19cc649",
+                                                    "image": "/static/Home_Barcelona.png",
+                                                    "category": "Shirt"
+                                                }
+                                            ]
                                         }
                                     }
                                 }
@@ -190,6 +253,16 @@
                                         "minLength": 8
                                     }
                                 }
+                            },
+                            "examples": {
+                                "sign up request body": {
+                                    "value": {
+                                        "name": "Lionel Messi",
+                                        "email": "lionelmessi@gmail.com",
+                                        "phone_number": "082135421945",
+                                        "password": "Barcelona123"
+                                    }
+                                }
                             }
                         }
                     }
@@ -204,6 +277,13 @@
                                     "properties": {
                                         "message": {
                                             "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "sign up successful response": {
+                                        "value": {
+                                            "message": "success, user created"
                                         }
                                     }
                                 }
@@ -262,11 +342,55 @@
                                             "type": "string"
                                         }
                                     }
+                                },
+                                "examples": {
+                                    "example for successful sign in": {
+                                        "value": [
+                                            {
+                                                "name": "Lionel Messi",
+                                                "email": "lionelmessi@gmail.com",
+                                                "phone_number": "082135421945",
+                                                "type": "buyer"
+                                            },
+                                            {
+                                                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                                            },
+                                            {
+                                                "message": "Login success"
+                                            }
+                                        ]
+                                    }
                                 }
                             }
                         }
                     },
-                    "400": {}
+                    "401": {
+                        "description": "Response for failed sign in caused of wrong email",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "failed sign in due to wrong email": {
+                                        "value": {
+                                            "message": "Error, email not registered"
+                                        }
+                                    },
+                                    "Failed sign in due to wrong password": {
+                                        "value": {
+                                            "message": "Error, wrong password"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         },
@@ -367,16 +491,47 @@
                                                     }
                                                 }
                                             }
+                                        },
+                                        "total_rows": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Get Product List": {
+                                        "description": "Example of successfully get product list",
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": "11987fc5-c3b9-427a-9999-9dcca19cc649",
+                                                    "images": "/static/barcelona_2011.png",
+                                                    "title": "Barcelona Home Jersey Champions League Winner",
+                                                    "price": 1500000
+                                                }
+                                            ],
+                                            "total_rows": 4
                                         }
                                     }
                                 }
-                            },
-                            "text/plain; charset=utf-8": {
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
                                 "schema": {
-                                    "type": "integer",
+                                    "type": "string",
                                     "properties": {
-                                        "total_rows": {
-                                            "type": "integer"
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Get Product List": {
+                                        "description": "Example of failed getting product list",
+                                        "value": {
+                                            "message": "Error, product not found"
                                         }
                                     }
                                 }
