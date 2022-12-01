@@ -12,6 +12,7 @@ from categories import categories_bp
 from cart import cart_bp
 from shipping import shipping_bp
 from user import user_bp
+from swagger import swagger_ui_blueprint
 from sqlalchemy import (
     MetaData,
     Table,
@@ -31,7 +32,7 @@ def create_app():
 
     # always register your blueprint(s) when creating application
     blueprints = [signup_bp, login_bp, products_bp, home_bp,
-                  categories_bp, cart_bp, shipping_bp, user_bp, image_bp]
+                  categories_bp, cart_bp, shipping_bp, user_bp, image_bp, swagger_ui_blueprint]
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
 
