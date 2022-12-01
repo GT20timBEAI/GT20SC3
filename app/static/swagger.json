@@ -1,0 +1,1925 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "description": "GT20 Team Final Project of Backend Track B-)",
+        "version": "0.0.1",
+        "title": "Startup Campus Backend Final Project",
+        "contact": {
+            "name": "Team GT20",
+            "email": "gt20@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://fashion-campus-gt20.my.id:5000"
+        }
+    ],
+    "components": {
+        "securitySchemes": {
+            "Fashion-Campus-Auth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "in": "header",
+                "name": "JWT-FC"
+            }
+        },
+        "responses": {
+            "UnauthorizedError": {
+                "description": "Access token is missing or invalid"
+            }
+        }
+    },
+    "paths": {
+        "/image/{urlPath}": {
+            "get": {
+                "tags": [
+                    "UNIVERSAL"
+                ],
+                "summary": "Get Image to Show In The Platform",
+                "description": "Get image from google cloud storage",
+                "parameters": [
+                    {
+                        "name": "urlPath",
+                        "required": true,
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "image/png": {
+                                "schema": {
+                                    "type": "image/png",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "displaying image": {
+                                        "description": "Responses for failed get an image from Google Cloud Storage",
+                                        "value": {
+                                            "message": "Error, image not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/home/banner": {
+            "get": {
+                "tags": [
+                    "HOME"
+                ],
+                "summary": "Fetch all data in database to show them in the home page as banner image",
+                "description": "The data that mentioned in the above summary are meant to image data as it be",
+                "responses": {
+                    "200": {
+                        "description": "Success Get Banner",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "image": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Get Banner": {
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": "11987fc5-c3b9-427a-9999-9dcca19cc649",
+                                                    "image": "/static/Home_Barcelona.png",
+                                                    "title": "Barcelona Home Jersey Champions League Winner"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/home/category": {
+            "get": {
+                "tags": [
+                    "HOME"
+                ],
+                "summary": "Fetch all data in database to show them in the home page as category",
+                "description": "The data that mentioned in the above summary are meant to category items to sell in the website",
+                "responses": {
+                    "200": {
+                        "description": "Success Get Category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "image": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Get Category": {
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": "11987fc5-c3b9-427a-9999-9dcca19cc649",
+                                                    "image": "/static/Home_Barcelona.png",
+                                                    "category": "Shirt"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/sign-up": {
+            "post": {
+                "tags": [
+                    "AUTHENTICATION"
+                ],
+                "summary": "Signing Up a New Account For User",
+                "description": "Signing Up with an email, password, and phone number with some policy in every user data",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "required": true,
+                                        "minLength": 5
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "required": true
+                                    },
+                                    "phone_number": {
+                                        "type": "integer",
+                                        "required": true,
+                                        "minLength": 12
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "required": true,
+                                        "minLength": 8
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "sign up request body": {
+                                    "value": {
+                                        "name": "Lionel Messi",
+                                        "email": "lionelmessi@gmail.com",
+                                        "phone_number": "082135421945",
+                                        "password": "Barcelona123"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "success, user created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "sign up successful response": {
+                                        "value": {
+                                            "message": "success, user created"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {}
+                }
+            }
+        },
+        "/sign-in": {
+            "post": {
+                "tags": [
+                    "AUTHENTICATION"
+                ],
+                "summary": "Sign in to the website with registered account",
+                "description": "If any wrong credential while inputing your data, the website would give 400 status code",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "required": true,
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "required": true,
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "phone_number": {
+                                            "type": "string"
+                                        },
+                                        "type": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "example for successful sign in": {
+                                        "value": [
+                                            {
+                                                "name": "Lionel Messi",
+                                                "email": "lionelmessi@gmail.com",
+                                                "phone_number": "082135421945",
+                                                "type": "buyer"
+                                            },
+                                            {
+                                                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+                                            },
+                                            {
+                                                "message": "Login success"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Response for failed sign in caused of wrong email",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "failed sign in due to wrong email": {
+                                        "value": {
+                                            "message": "Error, email not registered"
+                                        }
+                                    },
+                                    "Failed sign in due to wrong password": {
+                                        "value": {
+                                            "message": "Error, wrong password"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products": {
+            "get": {
+                "tags": [
+                    "PRODUCT LIST"
+                ],
+                "summary": " Get an available product from website's catalog",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "sort_by",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "price",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "condition",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "product_name",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Get Product List",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "image": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    },
+                                                    "price": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "total_rows": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Get Product List": {
+                                        "description": "Example of successfully get product list",
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": "11987fc5-c3b9-427a-9999-9dcca19cc649",
+                                                    "images": "/static/barcelona_2011.png",
+                                                    "title": "Barcelona Home Jersey Champions League Winner",
+                                                    "price": 1500000
+                                                }
+                                            ],
+                                            "total_rows": 4
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "Get Product List": {
+                                        "description": "Example of failed getting product list",
+                                        "value": {
+                                            "message": "Error, product not found"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Add product by Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "product_name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "images": {
+                                        "type": "array"
+                                    },
+                                    "condition": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "Request Body": {
+                                    "description": "Example of correct request body",
+                                    "value": {
+                                        "product_name": "Barcelona 2011/2012 Long Sleeve Original Jersey",
+                                        "description": "Jersey where Barcelona win Champions League and Club World Cup Trophy",
+                                        "images": [
+                                            "Barcelona_Home_2011/2012.png",
+                                            "Barcelona_Away_2011/2012.png"
+                                        ],
+                                        "condition": "New",
+                                        "category": "Shirt",
+                                        "price": 1500000
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Responses for successfully adding product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Example of success add product from admin",
+                                        "value": {
+                                            "message": "Product added"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Update product by Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "product_name": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "images": {
+                                        "type": "array"
+                                    },
+                                    "condition": {
+                                        "type": "string"
+                                    },
+                                    "category": {
+                                        "type": "string"
+                                    },
+                                    "price": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "Request Body": {
+                                    "description": "Example of correct request body",
+                                    "value": {
+                                        "product_name": "Real Madrid Long Sleeve Original Jersey",
+                                        "description": "Jersey where Real Madird win Champions League in 2018",
+                                        "images": [
+                                            "Real_Madrid_Home_2018/2019.png",
+                                            "Real_Madrid_Away_2018/2019.png"
+                                        ],
+                                        "condition": "New",
+                                        "category": "Shirt",
+                                        "price": 1500000
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Responses for successfully updating product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Example of success updating product from admin",
+                                        "value": {
+                                            "message": "Product updated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "get": {
+                "tags": [
+                    "PRODUCT LIST"
+                ],
+                "summary": "Get Category for Searching Items",
+                "responses": {
+                    "200": {
+                        "description": "Success Get Category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "title": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Add category of product by Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string",
+                                "properties": {
+                                    "category_name": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "create_product": {
+                                    "description": "Example of correct request body for creating product",
+                                    "value": {
+                                        "category_name": "Accessories"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Response for successfully create new product category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "create_product": {
+                                        "description": "Response for successfully create new product category",
+                                        "value": {
+                                            "message": "Category added"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/products/search_image": {
+            "post": {
+                "tags": [
+                    "PRODUCT LIST"
+                ],
+                "summary": "Search a product by image using base64 encoded string",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/vnd.github.base64": {
+                            "schema": {
+                                "type": "string",
+                                "properties": {
+                                    "image": {
+                                        "type": "string",
+                                        "required": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "aaa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "tags": [
+                    "PRODUCT DETAIL PAGE"
+                ],
+                "summary": "Get detail information from an item",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "aaa",
+                        "required": false,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Get Product Detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "size": {
+                                            "type": "string"
+                                        },
+                                        "product_detail": {
+                                            "type": "string"
+                                        },
+                                        "price": {
+                                            "type": "integer"
+                                        },
+                                        "images_url": {
+                                            "type": "string"
+                                        },
+                                        "category_id": {
+                                            "type": "string"
+                                        },
+                                        "category_name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/cart": {
+            "post": {
+                "tags": [
+                    "CART"
+                ],
+                "summary": "Add product to user's cart",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    },
+                                    "size": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Product added to cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "CART"
+                ],
+                "summary": "Get product's information in detail",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success get product's detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "string"
+                                            },
+                                            "details": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "quantity": {
+                                                        "type": "integer"
+                                                    },
+                                                    "size": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            },
+                                            "price": {
+                                                "type": "integer"
+                                            },
+                                            "image": {
+                                                "type": "string"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/user/shipping_address": {
+            "get": {
+                "tags": [
+                    "CART"
+                ],
+                "summary": "Get user shipping address data in detail",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Get User's Shipping Address",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "phone_number": {
+                                            "type": "string"
+                                        },
+                                        "address": {
+                                            "type": "string"
+                                        },
+                                        "city": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "PROFILE PAGE"
+                ],
+                "summary": "Change user's shipping address data",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "phone_number": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "success": {
+                                    "description": "Success for updating data",
+                                    "value": {
+                                        "name": "Anthony Milinkovic",
+                                        "phone_number": "082145421945",
+                                        "address": "Jl Juventus Turin Allianz Stadium",
+                                        "city": "Turin"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success for updating data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "phone_number": {
+                                            "type": "string"
+                                        },
+                                        "address": {
+                                            "type": "string"
+                                        },
+                                        "city": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success for updating data",
+                                        "value": {
+                                            "name": "Anthony Milinkovic",
+                                            "phone_number": "082145421945",
+                                            "address": "Jl Juventus Turin Allianz Stadium",
+                                            "city": "Turin"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/shipping_price": {
+            "get": {
+                "tags": [
+                    "CART"
+                ],
+                "summary": "Calculate shipping price by certain condition",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully calculate shipping price",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "price": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Example of success calculate shipping price",
+                                        "value": [
+                                            {
+                                                "name": "regular",
+                                                "price": 30000
+                                            },
+                                            {
+                                                "name": "next day",
+                                                "price": 50000
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/order": {
+            "post": {
+                "tags": [
+                    "CART"
+                ],
+                "summary": "Process an order from user",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "properties": {
+                                    "shipping_method": {
+                                        "type": "string"
+                                    },
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "phone_number": {
+                                        "type": "string"
+                                    },
+                                    "address": {
+                                        "type": "string"
+                                    },
+                                    "city": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "success": {
+                                    "description": "Success created an order",
+                                    "value": [
+                                        {
+                                            "shipping_method": "Same day"
+                                        },
+                                        {
+                                            "name": "Anthony",
+                                            "phone_number": "082145427945",
+                                            "address": "Jl Manchester City Etihad Stadium",
+                                            "city": "Manchester"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Order success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Order success",
+                                        "value": {
+                                            "message": "Order success"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/cart/{cart_id}": {
+            "delete": {
+                "tags": [
+                    "CART"
+                ],
+                "summary": "Delete one product from user's cart",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "cart_id",
+                        "description": "parameter where the id of product exist for deleting purpose",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success deleting product from cart",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Cart deleted",
+                                        "value": {
+                                            "message": "Cart deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "PROFILE PAGE"
+                ],
+                "summary": "Get user's profile in detail",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success get user's profile information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "phone_number": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Get user's profile success",
+                                        "value": {
+                                            "name": "Anthony",
+                                            "email": "anthony@manchester.com",
+                                            "phone_number": "082145427945"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/user/balance": {
+            "post": {
+                "tags": [
+                    "PROFILE PAGE"
+                ],
+                "summary": "Add balance to user's money",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string",
+                                "properties": {
+                                    "amount": {
+                                        "type": "integer"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "success": {
+                                    "description": "Success create balance",
+                                    "value": {
+                                        "amount": 1000000
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success create balance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success create balance",
+                                        "value": {
+                                            "message": "Top up balance success"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "PROFILE PAGE"
+                ],
+                "summary": "Get current user's balance",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success getting user's balance",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "balance": {
+                                                "type": "integer"
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success getting user's balance",
+                                        "value": {
+                                            "balance": 1000000
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/user/order": {
+            "get": {
+                "tags": [
+                    "PROFILE PAGE"
+                ],
+                "summary": "Get all information from user's order",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success get user's order",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "properties": {
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "created_at": {
+                                            "type": "string"
+                                        },
+                                        "products": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "details": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "quantity": {
+                                                                "type": "integer"
+                                                            },
+                                                            "size": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "price": {
+                                                        "type": "integer"
+                                                    },
+                                                    "image": {
+                                                        "type": "string"
+                                                    },
+                                                    "name": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "shipping_method": {
+                                            "type": "string"
+                                        },
+                                        "shipping_address": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "phone_number": {
+                                                    "type": "string"
+                                                },
+                                                "address": {
+                                                    "type": "string"
+                                                },
+                                                "city": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success get user's order detail",
+                                        "value": [
+                                            {
+                                                "id": "bd93ccda-2342-4698-aefc-fc44e187be26",
+                                                "created_at": "Fri, 27 August 2022",
+                                                "product": [
+                                                    {
+                                                        "id": "356ffd58-72d1-40f9-9e39-8bdf3020ccaa",
+                                                        "details": {
+                                                            "quantity": 20,
+                                                            "size": "L"
+                                                        },
+                                                        "price": 100000,
+                                                        "image": "/static/blazer_barcelona.png",
+                                                        "name": "Decul Garis Keras"
+                                                    }
+                                                ],
+                                                "shipping_method": "Same day",
+                                                "shipping_address": {
+                                                    "address_name": "Anthony Milinkovic",
+                                                    "phone_number": "082145421945",
+                                                    "address": "Jl Juventus Turin Allianz Stadium",
+                                                    "city": "Turin"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/orders": {
+            "get": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Get order data of user",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "sort_by",
+                        "description": "Sorting item with certain condition",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "page_size",
+                        "required": false,
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success get user's order detail",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string"
+                                                    },
+                                                    "user_name": {
+                                                        "type": "string"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string"
+                                                    },
+                                                    "user_id": {
+                                                        "type": "string"
+                                                    },
+                                                    "user_email": {
+                                                        "type": "string"
+                                                    },
+                                                    "total": {
+                                                        "type": "integer"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Success get user's order detail",
+                                        "value": {
+                                            "data": [
+                                                {
+                                                    "id": "11987fc5-c3b9-427a-9999-9dcca19cc649",
+                                                    "user_name": "Donquixote Doflamingo",
+                                                    "created_at": "Fri, 27 August 2022",
+                                                    "user_id": "f190fa41-a38a-4ee2-bef1-ad83723978dd",
+                                                    "user_email": "doflamingo@onepiece.com",
+                                                    "total": "30"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/products/{product_id}": {
+            "delete": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Deleting certain product from Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "product_id",
+                        "description": "product id of target product",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Succesfully deleting product",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "success": {
+                                        "description": "Successfully deleting product",
+                                        "value": {
+                                            "message": "Product deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/{category_id}": {
+            "put": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Updating existing certain category by Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "string",
+                                "properties": {
+                                    "category_name": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "updating category": {
+                                    "description": "Example of correct request body for updating category",
+                                    "value": {
+                                        "category_name": "Hat"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Responses for successfully updating category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "updating category": {
+                                        "description": "Example of successfully updating category by Admin",
+                                        "value": {
+                                            "message": "Category updated"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Deleting certain category from Admin",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "required": true,
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responses for successfully deleting category",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "deleting category": {
+                                        "description": "Example of successfully deleting category by Admin",
+                                        "value": {
+                                            "message": "Category deleted"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        },
+        "/sales": {
+            "get": {
+                "tags": [
+                    "ADMIN PAGE"
+                ],
+                "summary": "Get total sales of selling product",
+                "security": [
+                    {
+                        "Fashion-Campus-Auth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Responses for successfully get total sales",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "get total sales": {
+                                        "description": "Example of successfully getting total sales",
+                                        "value": {
+                                            "data": {
+                                                "total": 1000000000
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#components/responses/UnauthorizedError"
+                    }
+                }
+            }
+        }
+    }
+}

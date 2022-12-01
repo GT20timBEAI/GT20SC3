@@ -1,7 +1,7 @@
 from flask import Blueprint, request
-from services.utils import validUser, run_query,  timeNow
-from services.shipping import checkCartUser, totalPrice
-from services.sendemail import sendOrderEmail
+from app.helper.utils import validUser, run_query,  timeNow
+from app.helper.shipping import checkCartUser, totalPrice
+from app.helper.sendemail import sendOrderEmail
 import json
 import uuid
 

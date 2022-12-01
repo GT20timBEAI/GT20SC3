@@ -50,8 +50,8 @@ Requirements (from the earliest to check):
 """
 
 from flask import Blueprint, request
-from services.utils import run_query
-from services.auth import inValid
+from app.helper.utils import run_query
+from app.helper.auth import inValid
 import jwt
 import uuid
 
@@ -64,7 +64,7 @@ def login():
     # try:
     body = request.json
     email, password = body["email"], body["password"]
-
+    email = email.lower()
     # TODO Pasword requirements
     if len(password) < 8:
         return {"message": "Password must contain at least 8 characters"},400
@@ -82,9 +82,11 @@ def login():
     for i in users:
         if i["email"] == email:
             if i["password"] == password:
+                if i['is_admin'] == 2:
+                    return {"message" : "Check your email for Verify Your account"}, 400
                 id = uuid.uuid4()
                 token = jwt.encode({"email" : email},
-                id) #dont using algorithm because on output jwt not be
+                str(id)) #dont using algorithm because on output jwt not be
                                   #available to use this case 
                 # jwt.decode(token, "inirahasiakita", algorithms=["RS256"]
                 type = "buyer" if i["is_admin"] == 0  else "seller"

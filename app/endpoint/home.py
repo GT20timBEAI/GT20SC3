@@ -1,6 +1,6 @@
 
 from flask import Blueprint
-from services.utils import run_query
+from app.helper.utils import run_query
 
 home_bp = Blueprint("home", __name__, url_prefix="/home")
 
@@ -12,7 +12,6 @@ def getBanner():
     """)
     list_banner = []
     loop = 0
-    list_image = ['/image/banner/banner-1.jpg', '/image/banner/banner_2.jpg']
     for i in banner:
         if loop <= 3 and len(banner) > loop:
             dict = {}

@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from services.utils import run_query, validUser
+from app.helper.utils import run_query, validUser
 import uuid
 import json
 

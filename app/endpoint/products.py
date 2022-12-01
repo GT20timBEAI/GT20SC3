@@ -111,11 +111,11 @@ Requirements (from the earliest to check):
 """
 
 from flask import Blueprint, request
-from services.utils import (
+from app.helper.utils import (
     run_query, 
     validUser
     )
-from services.product_services import (
+from app.helper.product_services import (
     checkProduct,
     deleteStorage,
     base64_split,
@@ -124,7 +124,7 @@ from services.product_services import (
     ProductListGet
 
 )
-from services.auth import symbol
+from app.helper.auth import symbol
 import uuid
 import os
 import base64

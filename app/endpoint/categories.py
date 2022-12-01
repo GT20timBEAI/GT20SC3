@@ -1,6 +1,6 @@
 from flask import Blueprint, request
-from services.utils import validUser, run_query
-from services.category import checkCategoryName
+from app.helper.utils import validUser, run_query
+from app.helper.category import checkCategoryName
 import uuid
 import json
 
@@ -19,7 +19,7 @@ def getCategories():
             category_data.append(dict)
         return {"data": category_data}, 200
     except KeyError:
-        return {"message": "error, user already exist"}
+        return {"message": "error, category not defined"}
 
 # DONE WITH FRONT END
 @categories_bp.route("", methods=["POST"])

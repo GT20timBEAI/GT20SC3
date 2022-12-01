@@ -1,17 +1,19 @@
 from flask import Flask
-from model.sales import sales_bp
-from model.image import image_bp
-from model.getOrder import getOrder_bp
-from model.signup import signup_bp
-from services.utils import get_engine
-from model.products import products_bp
-from model.home import home_bp
-from model.login import login_bp
-from model.categories import categories_bp
-from model.cart import cart_bp
-from model.shipping import shipping_bp
-from model.user import user_bp
-from model.shipping_price import price_bp
+from app.static.swagger import swagger_ui_blueprint
+from app.endpoint.verifEmail import verif_bp
+from app.endpoint.sales import sales_bp
+from app.endpoint.image import image_bp
+from app.endpoint.getOrder import getOrder_bp
+from app.endpoint.signup import signup_bp
+from app.helper.utils import get_engine
+from app.endpoint.products import products_bp
+from app.endpoint.home import home_bp
+from app.endpoint.login import login_bp
+from app.endpoint.categories import categories_bp
+from app.endpoint.cart import cart_bp
+from app.endpoint.shipping import shipping_bp
+from app.endpoint.user import user_bp
+from app.endpoint.shipping_price import price_bp
 from sqlalchemy import (
     MetaData, 
     Table, 
@@ -24,24 +26,26 @@ from sqlalchemy import (
 from flask_cors import CORS
 
 
+
 cors = CORS()
 
 def create_app():
     app = Flask(__name__)
     cors.init_app(app)
     # always register your blueprint(s) when creating application
-    blueprints = [signup_bp, login_bp, products_bp, home_bp, categories_bp, cart_bp, shipping_bp, user_bp, image_bp, price_bp, sales_bp, getOrder_bp]
+    blueprints = [verif_bp, signup_bp, login_bp, products_bp, home_bp, categories_bp, cart_bp, shipping_bp, user_bp, image_bp, price_bp, sales_bp, getOrder_bp, swagger_ui_blueprint]
     for blueprint in blueprints:
         app.register_blueprint(blueprint)
     
-
+    # from app.services.utils import run_query
+    # import uuid
     # id = uuid.uuid4()
     # run_query(f"insert into \"Users\" (id, name, email, phone_number,\
     #     password,is_admin, balance) VALUES (\'{id}\', \'Darul\', \'gt20@gmail.com\',\
     #         6285268487441, \'Qwerty123\', 1, '0')", True)
-    # # run_query("""
-    # #     drop table "Users", "Category", "Product_list", "Cart", "Orders", "Buyer_Shipping", "Image"
-    # #     """, True)
+    # run_query("""
+    #     drop table "Users", "Category", "Product_list", "Cart", "Orders", "Buyer_Shipping", "Image"
+    #     """, True)
     # buat table dengan template ORM dibawah
     engine = get_engine()
     meta = MetaData()

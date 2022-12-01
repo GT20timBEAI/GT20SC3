@@ -1,7 +1,7 @@
-
-from flask import Blueprint,request
-from services.utils import run_query
-from services.auth import inValid, symbol
+from flask import Blueprint, request
+from app.helper.utils import run_query
+from app.helper.auth import inValid, symbol
+from app.helper.sendemail import sendVerifyEmail
 import uuid
 
 
@@ -14,7 +14,8 @@ def signup():
         body = request.json
         name, email, phone, password = body["name"], body["email"], body["phone_number"], body["password"]
         users = run_query("select email, phone_number from \"Users\"")
-        
+        email = email.lower()
+
         # TODO: Pasword requirements
         if len(password) < 8:
             return {"message": "Password must contain at least 8 characters"},400
@@ -44,8 +45,12 @@ def signup():
         #TODO: Succesfull
         id = uuid.uuid4()
         run_query(f"insert into \"Users\"(id, name, email, phone_number, password, is_admin, balance)\
-             values(\'{id}\',\'{name}\',\'{email}\',{phone},\'{password}\', 0 , 0)", True)
-        return {"message": "success, user created"}, 201
+             values(\'{id}\',\'{name}\',\'{email}\',{phone},\'{password}\', 2 , 0)", True)
+
+        # send email verification
+        sendVerifyEmail(name, id, email)
+
+        return {"message": "success, user created Check your email"}, 201
 
     except:
         return {"error" : "Email, password, name, phone number not entered"}, 400

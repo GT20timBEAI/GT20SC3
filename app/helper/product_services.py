@@ -1,4 +1,4 @@
-from services.utils import run_query
+from app.helper.utils import run_query
 from google.cloud import storage
 
 # TODO: check product id
@@ -84,6 +84,7 @@ def ProductListSorted(category_id, sort_by, price, condition, product_name):
     WHERE {category}{condition}{product_name} status = 1
     {sorted}
     """)
+
 
     return data
 

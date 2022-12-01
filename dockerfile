@@ -4,5 +4,5 @@ WORKDIR /app
 ENV FLASK_RUN_HOST=0.0.0.0
 COPY requirements.txt requirements.txt
 RUN pip3.9 install -r requirements.txt
-COPY . .
+COPY /app .
 CMD ["flask","--app", "main", "run"]
