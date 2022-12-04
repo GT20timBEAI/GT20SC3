@@ -11,21 +11,23 @@ def getBanner():
     SELECT id, product_name FROM "Product_list"
     """)
     list_banner = []
+    list_image = ["/image/banner/banner-1.png", "/image/banner/banner-2.png"]
     loop = 0
     for i in banner:
-        if loop <= 3 and len(banner) > loop:
+        if loop <= 2:
             dict = {}
-            image = run_query(f"""
-            SELECT image_url FROM "Image"
-            WHERE product_id = '{i['id']}'
-            """)
-            if len(image) == 0:
-                image = '/image/dummy.png'
-            else:
-                image = image[0]['image_url']
+            # image = run_query(f"""
+            # SELECT image_url FROM "Image"
+            # WHERE product_id = '{i['id']}'
+            # """)
+            # if len(image) == 0:
+            #     image = '/image/dummy.png'
+            # else:
+            #     image = image[0]['image_url']
             # image = list_image[loop]
+
             dict['id'] = i['id']
-            dict['image'] = image
+            dict['image'] = list_image[loop - 1]
             dict['title'] = i['product_name']
             list_banner.append(dict)
             loop += 1

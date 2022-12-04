@@ -129,6 +129,7 @@ import uuid
 import os
 import base64
 import json
+from app.Ai.main import SearchImage
 
 
 products_bp = Blueprint("products", __name__, url_prefix="/products")
@@ -218,17 +219,29 @@ def searchimage():
     body = json.loads(body)
 
     # FIXME: base64 consume data AI
-    image = body['images']
+    image = body['image']
+    image = base64_split(image)
+
 
 
     #source code tim AI
-    category_name = None
-    
+    category_name = SearchImage(image)
+
+    if category_name == "Coat" or category_name == "T-Shirt/top" or category_name == "Dress":
+        category_name = "Shirt" 
+    if category_name == "Trouser":
+        category_name = "Pants"
+    if category_name == "Sandal" or category_name == "Sneaker" or category_name == "Ankle Boot":
+        category_name = "Shoes"
+
+
     id = run_query(f"""
     select category_id from "Category"
     where category_name='{category_name}'
-    """)[0]['category_id']
-    return {"category_id" : id }, 200
+    """)
+    if len(id) == 0:
+        id = None
+    return {"category" : id[0]['category_id'] }, 200
 
 #DONE: TIME TO REVIEW
 @products_bp.route("/<string:urlpath>", methods=["GET"])
@@ -317,7 +330,7 @@ def createProduct():
         list.append(f'{product_name}{no}.png')
         
         #delete file
-        os.remove(f'../app/{product_name}{no}.png')
+        os.remove(f'{product_name}{no}.png')
         no += 1
 
     #TODO: insert into database product_list
